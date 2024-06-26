@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react"
 import { socket } from "@/common/lib/socket"
+import { useOptions } from "@/common/recoil/options"
 
 let moves:[number,number][]=[]
 export const useDraw=(
-    option: CtxOptions,
-    ctx?:CanvasRenderingContext2D
+    blocked: boolean,
+    movedX: number,
+    movedY: number,
+    handleEnd: ()=>void,
+    ctx?:CanvasRenderingContext2D | undefined,
+
 )=>{
     const [drawing,setDrawing]=useState(false)
-
+    const option=useOptions()
     useEffect(()=>{
         if(ctx){
             ctx.lineJoin="round"
@@ -18,11 +23,11 @@ export const useDraw=(
     })
 
     const handleStartDrawing=(x:number,y:number)=>{
-        if(!ctx) return
-        moves=[[x,y]]
+        if(!ctx || blocked) return
+        moves=[[x+movedX,y+movedY]]
         setDrawing(true)
         ctx.beginPath()
-        ctx.lineTo(x,y)
+        ctx.lineTo(x+movedX,y+movedY)
         ctx.stroke()
     }
 
@@ -31,12 +36,13 @@ export const useDraw=(
         socket.emit("draw",moves,option)
         setDrawing(false)
         ctx.closePath()
+        handleEnd()
     }
 
     const handleDraw=(x:number,y:number)=>{
-        if(ctx && drawing){
-            moves.push([x,y])
-            ctx.lineTo(x,y)
+        if(ctx && drawing && !blocked){
+            moves.push([x+movedX,y+movedY])
+            ctx.lineTo(x+movedX,y+movedY)
             ctx.stroke()
         }
     }
