@@ -74,7 +74,7 @@ nextApp.prepare().then(async ()=>{
 
     app.all("*",(req:any,res:any)=>nextHandler(req,res))
 
-    app.listen(port,()=>{
+    server.listen(port,()=>{
         console.log(`Server is running on http://localhost:${port}`)
     })
 })
