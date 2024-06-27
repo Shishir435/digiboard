@@ -15,8 +15,8 @@ const MousePosition = () => {
             socket.emit("mouse_move",getPos(docX,x),getPos(docY,y))
             previousPos.current={x:docX,y:docY}
         }
-        // magic number 300 it will lsiten to events in every 300 miliseconds
-    },300)
+        // magic number 25 it will lsiten to events in every 300 miliseconds
+    },25)
   return (
     <motion.div
     ref={ref}
