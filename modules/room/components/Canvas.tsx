@@ -70,7 +70,7 @@ const Canvas = () => {
     }
   },[ctx, drawing])
   return (
-    <div className="h-full w-full overflow-hidden ">
+    <div className="relative h-full w-full overflow-hidden ">
       <motion.canvas 
       ref={canvasRef}
       width={CANVAS_SIZE.width}
@@ -94,7 +94,7 @@ const Canvas = () => {
       onTouchEnd={handleEndDrawing}
       onTouchMove={(e)=>handleDraw(e.touches[0].clientX,e.touches[0].clientY)} 
       />
-    <MiniMap ref={smallCanvasRef} x={x} y={y} dragging={dragging} setMovedMiniMap={setMovedMiniMap} />
+    <MiniMap ref={smallCanvasRef} dragging={dragging} setMovedMiniMap={setMovedMiniMap} />
   </div>
   )
 }
