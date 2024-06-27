@@ -63,7 +63,7 @@ nextApp.prepare().then(async ()=>{
         })
 
         socket.on("mouse_move",(x,y)=>{
-            console.log("mouse_move",x,y)
+            // console.log("mouse_move",x,y)
             socket.broadcast.emit("mouse_moved",x,y,socket.id)
         })
 
