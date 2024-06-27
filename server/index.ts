@@ -11,7 +11,7 @@ const nextApp=next({dev})
 const nextHandler:NextApiHandler=nextApp.getRequestHandler()
 
 import {Server} from "socket.io"
-import type { ClientToServerEvents,ServerToClientEvents } from "@/common/types/types"
+import type { } from "@/common/types/global"
 
 
 nextApp.prepare().then(async ()=>{
@@ -27,10 +27,26 @@ nextApp.prepare().then(async ()=>{
     io.on("connection",(socket)=>{
         console.log("connection")
 
+        socket.join("global")
+
+        const allUsers=io.sockets.adapter.rooms.get("global")
+        if(allUsers) io.emit("users_in_room",[...allUsers])
+
         socket.on("draw",(moves,option)=>{
             console.log("drawing")
-            socket.broadcast.emit("socket_draw",moves,option)
+            socket.broadcast.emit("user_draw",moves,option,socket.id)
         })
+
+        socket.on("undo",()=>{
+            console.log("undo")
+            socket.broadcast.emit("user_undo",socket.id)
+        })
+
+        socket.on("mouse_move",(x,y)=>{
+            console.log("mouse_move",x,y)
+            socket.broadcast.emit("mouse_moved",x,y,socket.id)
+        })
+
         socket.on("disconnect",()=>{
             console.log("client disconnected")
         })

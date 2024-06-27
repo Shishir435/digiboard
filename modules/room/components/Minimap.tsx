@@ -8,14 +8,14 @@ import React, {
 import { MotionValue, useMotionValue, motion } from "framer-motion";
 import { useViewPortSize } from "@/common/hooks/useViewPortSize";
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { useBoardPosition } from "../hooks/useBoardPosition";
 interface MiniMapProps {
-  x: MotionValue<number>;
-  y: MotionValue<number>;
   dragging: boolean;
   setMovedMiniMap: Dispatch<SetStateAction<boolean>>;
 }
 const MiniMap = forwardRef<HTMLCanvasElement, MiniMapProps>(
-  ({ x, y, dragging, setMovedMiniMap }, ref) => {
+  ({dragging, setMovedMiniMap }, ref) => {
+    const {x,y}=useBoardPosition()
     const containerRef = useRef<HTMLDivElement>(null);
     const { height, width } = useViewPortSize();
 
@@ -61,7 +61,7 @@ const MiniMap = forwardRef<HTMLCanvasElement, MiniMapProps>(
           className="absolute top-0 right-0 cursor-grab border-2 border-red-500"
           style={{ width: width / 10, height: height / 10, x: miniX, y: miniY }}
           animate={{ x: -x.get() / 10, y: -y.get() / 10 }}
-          transition={{ duration: 0.1 }}
+          transition={{ duration: 0 }}
         ></motion.div>
       </div>
     );
