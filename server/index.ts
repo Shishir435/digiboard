@@ -32,9 +32,9 @@ nextApp.prepare().then(async ()=>{
         const allUsers=io.sockets.adapter.rooms.get("global")
         if(allUsers) io.emit("users_in_room",[...allUsers])
 
-        socket.on("draw",(moves,option)=>{
+        socket.on("draw",(move)=>{
             console.log("drawing")
-            socket.broadcast.emit("user_draw",moves,option,socket.id)
+            socket.broadcast.emit("user_draw",move,socket.id)
         })
 
         socket.on("undo",()=>{
