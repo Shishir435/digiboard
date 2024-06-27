@@ -11,7 +11,7 @@ const nextApp=next({dev})
 const nextHandler:NextApiHandler=nextApp.getRequestHandler()
 
 import {Server} from "socket.io"
-import type { ClientToServerEvents,ServerToClientEvents } from "@/common/types/types"
+import type { } from "@/common/types/global"
 
 
 nextApp.prepare().then(async ()=>{
