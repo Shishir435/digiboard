@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react"
 import { socket } from "@/common/lib/socket"
 import { useOptions } from "@/common/recoil/options"
-import { drawOnUndo } from "../helpers/canvas.helpers"
+import { drawOnUndo, handleMove } from "../helpers/canvas.helpers"
 import usersAtom, { useUsers } from "@/common/recoil/users"
 import { useBoardPosition } from "./useBoardPosition"
 import { getPos } from "@/common/lib/getPos"
 import { useSetRecoilState } from "recoil"
 
 let moves:[number,number][]=[]
-let savedMoves:[number,number][][]=[]
+let savedMoves:Move[]=[]
 export const useDraw=(
     blocked: boolean,
     handleEnd: ()=>void,
@@ -16,7 +16,7 @@ export const useDraw=(
 
 )=>{
     const [drawing,setDrawing]=useState(false)
-    const option=useOptions()
+    const options=useOptions()
     const users=useUsers()
     const boardPosition=useBoardPosition()
     const movedX=boardPosition.x
@@ -25,8 +25,8 @@ export const useDraw=(
         if(ctx){
             ctx.lineJoin="round"
             ctx.lineCap="round",
-            ctx.lineWidth=option.lineWidth
-            ctx.strokeStyle=option.lineColor
+            ctx.lineWidth=options.lineWidth
+            ctx.strokeStyle=options.lineColor
         }
     })
 
@@ -36,7 +36,7 @@ export const useDraw=(
             socket.emit("undo")
             drawOnUndo(ctx,savedMoves,users)
         }
-    },[ctx,handleEnd,users])
+    },[ctx, users])
 
     useEffect(()=>{
         const handleUndoKeyBoard=(e:KeyboardEvent)=>{
@@ -61,8 +61,12 @@ export const useDraw=(
         if(!ctx || blocked) return
         setDrawing(false)
         ctx.closePath()
-        savedMoves.push(moves)
-        socket.emit("draw",moves,option)
+        const move:Move={
+            path: moves,
+            options
+        }
+        savedMoves.push(move)
+        socket.emit("draw",move)
         moves=[]
         handleEnd()
     }
@@ -79,29 +83,41 @@ export const useDraw=(
     return {handleStartDrawing,handleEndDrawing,handleDraw,drawing,handleUndo}
 }
 
-export const useSocketDraw=(ctx:CanvasRenderingContext2D,handleEnd:()=>void)=>{
+export const useSocketDraw=(ctx:CanvasRenderingContext2D,drawing:boolean,handleEnd:()=>void)=>{
     const setUsers=useSetRecoilState(usersAtom)
     useEffect(()=>{
-        socket.on("user_draw",(newMoves,options,userId)=>{
-            if(ctx){
-                ctx.lineWidth=options.lineWidth
-                ctx.strokeStyle=options.lineColor
+        let movesToDrawLater:Move|undefined
+        let userIdLater=""
 
-                ctx.beginPath()
-                newMoves.forEach(([x,y])=>{
-                    ctx.lineTo(x,y)
+        socket.on("user_draw",(move,userId)=>{
+            if(ctx && !drawing){
+                handleMove(move,ctx)
+                setUsers((prevUsers)=>{
+                    const newUsers={...prevUsers}
+                   if(newUsers[userId]) newUsers[userId]=[...newUsers[userId],move]
+                    return newUsers
                 })
-                ctx.stroke()
-                ctx.closePath()
+            }else{
+                movesToDrawLater=move
+                userIdLater=userId
+            }
+        })
+       
+
+        return()=>{
+            if(movesToDrawLater && userIdLater && ctx){
+                handleMove(movesToDrawLater,ctx)
                 handleEnd()
                 setUsers((prevUsers)=>{
                     const newUsers={...prevUsers}
-                    // @ts-ignore
-                    newMoves[userId]=[...newUsers[userId],newMoves]
+                    newUsers[userIdLater]=[...newUsers[userIdLater],movesToDrawLater as Move ]
                     return newUsers
                 })
             }
-        })
+            socket.off("user_draw")
+        }
+    },[ctx, drawing, handleEnd, setUsers])
+    useEffect(()=>{
         socket.on("user_undo",(userId)=>{
             setUsers((prevUsers)=>{
                const newUsers={...prevUsers}
@@ -113,10 +129,8 @@ export const useSocketDraw=(ctx:CanvasRenderingContext2D,handleEnd:()=>void)=>{
               return newUsers
             })
         })
-
-        return()=>{
+        return ()=>{
             socket.off("user_undo")
-            socket.off("user_draw")
         }
     },[ctx,handleEnd,setUsers])
 }

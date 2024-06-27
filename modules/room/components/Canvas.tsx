@@ -47,14 +47,15 @@ const Canvas = () => {
     handleDraw,
     handleEndDrawing,
     handleStartDrawing,
-    handleUndo
+    handleUndo,
+    drawing
   }=useDraw(dragging,copyCanvasToSmall,ctx)
   useKeyPressEvent('Control',(e)=>{
     if(e.ctrlKey && !dragging){
       setDragging(true)
     }
   })
-  useSocketDraw(ctx!,copyCanvasToSmall)
+  useSocketDraw(ctx!,drawing,copyCanvasToSmall)
   return (
     <div className="relative h-full w-full overflow-hidden ">
       <button className="absolute top-0 " onClick={handleUndo}>undo</button>
