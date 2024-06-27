@@ -24,7 +24,7 @@ export const drawOnUndo=(ctx:CanvasRenderingContext2D,
 )=>{
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
   Object.values(users).forEach((user)=>{
-    user.forEach((move)=>handleMove(move,ctx))
+    user?.forEach((move)=>handleMove(move,ctx))
   })
 
   savedMoves.forEach((move)=>{

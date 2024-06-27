@@ -1,7 +1,5 @@
 import {createServer} from "http"
-
 import express from "express"
-
 import next, {NextApiHandler} from "next"
 
 const port=parseInt(process.env.PORT || "3000")
@@ -41,34 +39,82 @@ nextApp.prepare().then(async ()=>{
         room?.get(socketId)?.pop()
     }
     io.on("connection",(socket)=>{
-        console.log("connection")
 
-        socket.join("global")
-        rooms.get("global")?.set(socket.id,[])
-        io.to(socket.id).emit("joined",JSON.stringify([...rooms.get("global")!]))
+        const getRoomId=()=>{
+            const joinedRoom=[...socket.rooms].find((room)=>room!==socket.id)
+            if(!joinedRoom) return socket.id
+            return joinedRoom
+        }
+        console.log("connected to server")
 
-        const allUsers=io.sockets.adapter.rooms.get("global")
-        if(allUsers) io.emit("users_in_room",[...allUsers])
+        socket.on("create_room",()=>{
+            let roomId:string
+            // generate random id
+            do{
+                roomId=Math.random().toString(36).substring(2,6)
+            } while(rooms.has(roomId))
+
+            socket.join(roomId)
+
+            rooms.set(roomId, new Map())
+            rooms.get(roomId)?.set(socket.id,[])
+            io.to(socket.id).emit("created",roomId)
+        })
+
+        socket.on("join_room",(roomId:string)=>{
+            if(rooms.has(roomId)){
+                socket.join(roomId)
+                io.to(socket.id).emit("joined",roomId)
+            }else{
+                // failed to join the room failed==true
+                io.to(socket.id).emit("joined","",true)
+            }
+        })
+
+        socket.on("joined_room",()=>{
+            console.log("joined room")
+            const roomId=getRoomId()
+
+            rooms.get(roomId)?.set(socket.id,[])
+            io.to(socket.id).emit("room",JSON.stringify([...rooms.get(roomId)!]))
+            socket.broadcast.to(roomId).emit("new_user",socket.id)
+        })
+        
+        socket.on("leave_room",()=>{
+            const roomId=getRoomId()
+            const user=rooms.get(roomId)?.get(socket.id)
+            if(user?.length===0){
+                rooms.get(roomId)?.delete(socket.id)
+            }
+        })
 
         socket.on("draw",(move)=>{
-            console.log("drawing")
-            addMove("global",socket.id,move)
-            socket.broadcast.emit("user_draw",move,socket.id)
+            const roomId=getRoomId()
+            console.log(roomId,"drawing")
+            addMove(roomId,socket.id,move)
+            socket.broadcast.to(roomId).emit("user_draw",move,socket.id)
         })
 
         socket.on("undo",()=>{
-            console.log("undo")
-            undoMove("global",socket.id)
-            socket.broadcast.emit("user_undo",socket.id)
+            const roomId=getRoomId()
+            console.log(roomId,"undo")
+            undoMove(roomId,socket.id)
+            socket.broadcast.to(roomId).emit("user_undo",socket.id)
         })
 
         socket.on("mouse_move",(x,y)=>{
-            // console.log("mouse_move",x,y)
-            socket.broadcast.emit("mouse_moved",x,y,socket.id)
+            const roomId=getRoomId()
+            socket.broadcast.to(roomId).emit("mouse_moved",x,y,socket.id)
         })
 
-        socket.on("disconnect",()=>{
-            console.log("client disconnected")
+        socket.on("disconnecting",()=>{
+            const roomId=getRoomId()
+            io.to(roomId).emit("user_disconnected",socket.id)
+            const user=rooms.get(roomId)?.get(socket.id)
+            if(user?.length===0){
+                rooms.get(roomId)?.delete(socket.id)
+            }
+            console.log("disconnected from server")
         })
     })
 

@@ -85,8 +85,13 @@ export const useDraw=(
 
 export const useSocketDraw=(ctx:CanvasRenderingContext2D,drawing:boolean,handleEnd:()=>void)=>{
     const setUsers=useSetRecoilState(usersAtom)
+
     useEffect(()=>{
-        socket.on("joined",(roomJSON)=>{
+        socket.emit("joined_room")
+    },[])
+
+    useEffect(()=>{
+        socket.on("room",(roomJSON)=>{
             const room:Room= new Map(JSON.parse(roomJSON))
             room.forEach((userMoves,userId)=>{
                 if(ctx){
@@ -97,7 +102,7 @@ export const useSocketDraw=(ctx:CanvasRenderingContext2D,drawing:boolean,handleE
             })
         })
         return ()=>{
-            socket.off("joined")
+            socket.off("room")
         }
     },[ctx,handleEnd,setUsers])
     useEffect(()=>{
@@ -136,7 +141,7 @@ export const useSocketDraw=(ctx:CanvasRenderingContext2D,drawing:boolean,handleE
         socket.on("user_undo",(userId)=>{
             setUsers((prevUsers)=>{
                const newUsers={...prevUsers}
-               newUsers[userId]=newUsers[userId].slice(0,-1)
+               newUsers[userId]=newUsers[userId]?.slice(0,-1)
               if(ctx){
                 drawOnUndo(ctx,savedMoves,newUsers)
                 handleEnd()
