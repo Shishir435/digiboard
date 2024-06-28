@@ -1,8 +1,8 @@
 
-import Room from "@/modules/room/components/Room";
-export default function Home() {
+import Home from "@/modules/home/components/Home";
+export default function HomePage() {
   
   return (
-    <Room/>
+    <Home/>
   );
 }
