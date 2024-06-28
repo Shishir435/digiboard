@@ -8,6 +8,13 @@ export declare global {
         options: CtxOptions
     }
 
+    export interface ClientRoom {
+        id: string;
+        users: Map<string,Move[]>;
+        movesWithoutUser: Move[];
+        myMoves: Move[];
+    }
+
     export type Room={users:Map<string,Move[]>,drawed:Move[]};
     export interface ServerToClientEvents {
         room: (room:Room,usersToParse:string)=>void;

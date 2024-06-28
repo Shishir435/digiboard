@@ -1,27 +1,31 @@
-import React, { useEffect } from "react";
+import { socket } from "@/common/lib/socket";
+import { useRoom, useSetRoomId } from "@/common/recoil/rooms";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import RoomContextProvider from "../context/room.context";
 import Canvas from "./Canvas";
 import MousePosition from "./MousePosition";
 import MouseRenderer from "./MouseRenderer";
 import ToolBar from "./ToolBar";
-import { useRoomId } from "@/common/recoil/rooms";
-import { useModal } from "@/common/recoil/modals";
-import NotFoundModal from "@/modules/home/modals/NotFound";
-import { useRouter } from "next/router";
 
 const Room = () => {
-  const roomId = useRoomId();
-  const { openModal } = useModal();
+  const room=useRoom()
+  const setRoomId=useSetRoomId()
   const router = useRouter();
-  useEffect(() => {
-    if (!roomId) {
-      openModal(
-        <NotFoundModal id={router.asPath.slice(1) || "room id not found"} />
-      );
+  useEffect(()=>{
+    const handleJoined=(roomidFromServer:string,failed?:boolean)=>{
+      if(failed) router.push("/")
+      else setRoomId(roomidFromServer)
     }
-  }, [roomId, openModal, router.asPath]);
-
-  if (!roomId) {
+    socket.on("joined",handleJoined)
+    return ()=>{
+    socket.off("joined",handleJoined)
+    }
+  },[router,setRoomId])
+  
+  if (!room.id) {
+    const dynamicRoomId=router.query.roomId?.toString()
+    if(dynamicRoomId) socket.emit("join_room",dynamicRoomId)
     return null; 
   }
   return (

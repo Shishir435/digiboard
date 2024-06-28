@@ -1,23 +1,26 @@
 import { CANVAS_SIZE } from '@/common/constants/canvasSize'
 import { useViewPortSize } from '@/common/hooks/useViewPortSize'
-import { useMotionValue,motion } from 'framer-motion'
-import React, { useEffect, useRef, useState } from 'react'
-import {useKeyPressEvent} from "react-use"
-import { useDraw, useSocketDraw } from '../hooks/canvas.hooks'
-import MiniMap from './Minimap'
+import { socket } from '@/common/lib/socket'
+import { useRoom } from '@/common/recoil/rooms'
+import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { useKeyPressEvent } from "react-use"
+import { drawAllMoves } from '../helpers/canvas.helpers'
 import { useBoardPosition } from '../hooks/useBoardPosition'
+import { useDraw } from '../hooks/useDraw'
+import { useSocketDraw } from '../hooks/useSocketDraw'
+import MiniMap from './Minimap' // const x=useMotionValue(0)
+// const y=useMotionValue(0)
+
+
 const Canvas = () => {
+  const room=useRoom()
   const canvasRef=useRef<HTMLCanvasElement>(null)
   const smallCanvasRef=useRef<HTMLCanvasElement>(null)
   const [dragging,setDragging]=useState(false)
   const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
   const [,setMovedMiniMap]=useState(false)
   const {width,height}=useViewPortSize()
-
- 
-
-  // const x=useMotionValue(0)
-  // const y=useMotionValue(0)
   const {x,y}=useBoardPosition()
 
   const copyCanvasToSmall=()=>{
@@ -41,7 +44,7 @@ const Canvas = () => {
   return ()=>{
     window.removeEventListener("keyup",handleKeyUp)
   }
-  }, [dragging,ctx])
+  }, [dragging])
 
   const {
     handleDraw,
@@ -49,13 +52,25 @@ const Canvas = () => {
     handleStartDrawing,
     handleUndo,
     drawing
-  }=useDraw(dragging,copyCanvasToSmall,ctx)
+  }=useDraw(ctx,dragging)
   useKeyPressEvent('Control',(e)=>{
     if(e.ctrlKey && !dragging){
       setDragging(true)
     }
   })
-  useSocketDraw(ctx!,drawing,copyCanvasToSmall)
+  useSocketDraw(ctx,drawing)
+
+  useEffect(()=>{
+    if(ctx){
+      socket.emit("joined_room")
+    }
+  },[ctx])
+  useEffect(()=>{
+    if(ctx){
+      drawAllMoves(ctx,room)
+      copyCanvasToSmall()
+    }
+  },[ctx, room])
   return (
     <div className="relative h-full w-full overflow-hidden ">
       <button className="absolute top-0 " onClick={handleUndo}>undo</button>
