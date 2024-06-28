@@ -18,7 +18,6 @@ const MiniMap = forwardRef<HTMLCanvasElement, MiniMapProps>(
     const {x,y}=useBoardPosition()
     const containerRef = useRef<HTMLDivElement>(null);
     const { height, width } = useViewPortSize();
-
     const miniX = useMotionValue(0);
     const miniY = useMotionValue(0);
 
@@ -38,7 +37,7 @@ const MiniMap = forwardRef<HTMLCanvasElement, MiniMapProps>(
 
     return (
       <div
-        className="absolute right-10 top-10 z-10 bg-zinc-400 "
+        className="absolute right-10 top-10 z-30 overflow-hidden rounded-lg shadow-lg "
         ref={containerRef}
         style={{
           width: CANVAS_SIZE.width / 10,

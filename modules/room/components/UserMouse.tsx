@@ -30,11 +30,10 @@ const UserMouse = ({userId}:{userId:string}) => {
       const unsubscribe=boardPos.y.onChange(setY)
       return unsubscribe
     },[boardPos.y])
-    console.log(pos.x)
   return (
     <motion.div className={`absolute top-0 left-0 text-blue-800 ${pos.x===-1 && "hidden"} pointer-events-none`}
     animate={{x:pos.x+x,y:pos.y+y}}
-    transition={{duration: 0.3, ease: "linear"}}
+    transition={{duration: 0.1, ease: "linear"}}
     >
       <BsCursorFill className="-rotate-90"/>
     </motion.div>

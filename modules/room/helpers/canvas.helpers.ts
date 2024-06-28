@@ -18,16 +18,22 @@ export const handleMove=(
     }
 }
 
-export const drawOnUndo=(ctx:CanvasRenderingContext2D,
-  savedMoves:Move[],
-  users: {[key:string]:Move[]}
+export const drawAllMoves=(
+  ctx:CanvasRenderingContext2D,
+  room: ClientRoom
 )=>{
+  const {movesWithoutUser,users,myMoves}=room
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-  Object.values(users).forEach((user)=>{
-    user.forEach((move)=>handleMove(move,ctx))
-  })
+  movesWithoutUser.forEach((move)=>handleMove(move,ctx))
 
-  savedMoves.forEach((move)=>{
-    handleMove(move,ctx)
+  users.forEach((userMoves)=>{
+    userMoves.forEach((move)=>handleMove(move,ctx))
   })
+  // TODO: fix this issue
+  Array.from(myMoves).forEach((move) => handleMove(move, ctx))
+  if (Array.isArray(myMoves)) {
+    // myMoves.forEach((move) => handleMove(move, ctx));
+  } else {
+    console.log('myMoves is not an array:', myMoves);
+  }
 }
