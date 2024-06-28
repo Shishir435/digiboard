@@ -9,7 +9,7 @@ const MouseRenderer = () => {
     <>
     {[...room.users.keys()].map((userId)=>{
       if(userId===socket.id) return null;
-      <UserMouse userId={userId} key={userId} />})}
+      <UserMouse userId={userId} key={userId} userName={room.users.get(userId)|| "Anonymous"} />})}
     </>
   )
 }

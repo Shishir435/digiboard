@@ -22,15 +22,15 @@ export const drawAllMoves=(
   ctx:CanvasRenderingContext2D,
   room: ClientRoom
 )=>{
-  const {movesWithoutUser,users,myMoves}=room
+  const {movesWithoutUser,usersMoves,myMoves}=room
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
   movesWithoutUser.forEach((move)=>handleMove(move,ctx))
 
-  users.forEach((userMoves)=>{
-    userMoves.forEach((move)=>handleMove(move,ctx))
+  usersMoves.forEach((userMove)=>{
+    userMove.forEach((move)=>handleMove(move,ctx))
   })
   // TODO: fix this issue
-  Array.from(myMoves).forEach((move) => handleMove(move, ctx))
+  // myMoves.forEach((move) => handleMove(move, ctx))
   if (Array.isArray(myMoves)) {
     // myMoves.forEach((move) => handleMove(move, ctx));
   } else {

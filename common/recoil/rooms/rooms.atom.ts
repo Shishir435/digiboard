@@ -6,6 +6,7 @@ export const roomAtom=atom<ClientRoom>({
     default: {
         id: "",
         users: new Map(),
+        usersMoves: new Map(),
         movesWithoutUser: [],
         myMoves:[]
     },

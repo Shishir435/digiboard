@@ -28,20 +28,20 @@ nextApp.prepare().then(async ()=>{
         const room=rooms.get(roomId)
 
         if(!room?.users?.has(socketId)){
-            room?.users?.set(socketId,[move])
+            room?.usersMoves?.set(socketId,[move])
         }
-        room?.users?.get(socketId)?.push(move)
+        room?.usersMoves?.get(socketId)?.push(move)
     }
 
     const undoMove=(roomId:string,socketId:string)=>{
         const room=rooms.get(roomId)
-        room?.users?.get(socketId)?.pop()
+        room?.usersMoves?.get(socketId)?.pop()
     }
 
     const leaveRoom=(roomId:string,socketId:string)=>{
         const room=rooms.get(roomId)
         if(!room) return
-        const userMoves=room?.users.get(socketId)!
+        const userMoves=room?.usersMoves.get(socketId)!
         room?.drawed.push(...userMoves)
         room?.users.delete(socketId)
         console.log(room)
@@ -56,7 +56,7 @@ nextApp.prepare().then(async ()=>{
         }
         console.log("connected to server")
 
-        socket.on("create_room",()=>{
+        socket.on("create_room",(userName)=>{
             let roomId:string
             // generate random id
             do{
@@ -65,14 +65,16 @@ nextApp.prepare().then(async ()=>{
 
             socket.join(roomId)
 
-            rooms.set(roomId,{users: new Map(),drawed: []})
-            rooms.get(roomId)?.users.set(socket.id,[])
+            rooms.set(roomId,{users: new Map([[socket.id,userName]]),drawed: [],usersMoves:new Map([[socket.id,[]]])})
             io.to(socket.id).emit("created",roomId)
         })
 
-        socket.on("join_room",(roomId:string)=>{
-            if(rooms.has(roomId)){
+        socket.on("join_room",(roomId,userName)=>{
+            const room=rooms.get(roomId)
+            if(room){
                 socket.join(roomId)
+                room.users.set(socket.id,userName)
+                room.usersMoves.set(socket.id,[])
                 io.to(socket.id).emit("joined",roomId)
             }else{
                 // failed to join the room failed==true
@@ -80,16 +82,23 @@ nextApp.prepare().then(async ()=>{
             }
         })
 
+        socket.on("check_room",(roomId)=>{
+            if(rooms.has(roomId)){
+                socket.emit("room_exists",true)
+            }else{
+                socket.emit("room_exists",false)
+            }
+
+        })
+
         socket.on("joined_room",()=>{
-            console.log("joined room")
             const roomId=getRoomId()
+            console.log(roomId,"joined room")
 
             const room=rooms.get(roomId)
-            if(room){
-                room.users.set(socket.id,[])
-                io.to(socket.id).emit("room",room,JSON.stringify([...room?.users]))
-                socket.broadcast.to(roomId).emit("new_user",socket.id)
-            }
+            if(!room) return
+            io.to(socket.id).emit("room",room,JSON.stringify([...room?.usersMoves]),JSON.stringify([...room?.users]))
+            socket.broadcast.to(roomId).emit("new_user",socket.id,room.users.get(socket.id)||"Anonymous")
         })
         
         socket.on("leave_room",()=>{

@@ -25,47 +25,52 @@ export const useSetRoomId=()=>{
 }
 
 export const useSetUsers=()=>{
-    const setUsers=useSetRecoilState(roomAtom)
-    const handleAddUser=(userId:string)=>{
-        setUsers((prev)=>{
+    const setRoom=useSetRecoilState(roomAtom)
+    const handleAddUser=(userId:string,userName:string)=>{
+        setRoom((prev)=>{
             const newUsers=prev.users
-            newUsers.set(userId,[])
-            return {...prev,users:newUsers}
+            const newUsersMoves=prev.usersMoves
+            newUsersMoves.set(userId,[])
+            newUsers.set(userId,userName)
+            return {...prev,users:newUsers,usersMoves:newUsersMoves}
         })
     }
     const handleRemoveUser=(userId:string)=>{
-        setUsers((prev)=>{
+        setRoom((prev)=>{
             const newUsers=prev.users
-            const userMoves=newUsers.get(userId)
+            const newUsersMoves=prev.usersMoves
+            const userMoves=newUsersMoves.get(userId)
             newUsers.delete(userId)
+            newUsersMoves.delete(userId)
             return {
                 ...prev,
                 users:newUsers,
+                usersMoves: newUsersMoves,
                 movesWithoutUser: [...prev.movesWithoutUser,...(userMoves||[])]
             }
         })
     }
 
     const handleAddMoveToUser=(userId:string,moves:Move)=>{
-        setUsers((prev)=>{
-            const newUser=prev.users
-            const olMoves=prev.users.get(userId)
-            newUser.set(userId,[...(olMoves||[]),moves])
+        setRoom((prev)=>{
+            const newUsersMoves=prev.usersMoves
+            const olMoves=prev.usersMoves.get(userId)
+            newUsersMoves.set(userId,[...(olMoves||[]),moves])
             return {
                 ...prev,
-                users: newUser
+                usersMoves: newUsersMoves
             }
         })
     }
     const handleRemoveMoveFromUser=(userId:string)=>{
-        setUsers((prev)=>{
-            const newUser=prev.users
-            const olMoves=prev.users.get(userId)
-            olMoves?.pop()
-            newUser.set(userId,olMoves||[])
+        setRoom((prev)=>{
+            const newUsersMoves=prev.usersMoves
+            const userMoves=prev.usersMoves.get(userId)
+            userMoves?.pop()
+            newUsersMoves.set(userId,userMoves||[])
             return {
                 ...prev,
-                users: newUser
+                usersMoves: newUsersMoves
             }
         })
     }

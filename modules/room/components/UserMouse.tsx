@@ -4,7 +4,7 @@ import { socket } from '@/common/lib/socket'
 import {motion} from "framer-motion"
 import {BsCursorFill} from "react-icons/bs"
 
-const UserMouse = ({userId}:{userId:string}) => {
+const UserMouse = ({userId,userName}:{userId:string,userName:string}) => {
     const boardPos=useBoardPosition()
     const [x,setX]=useState(boardPos.x.get())
     const [y,setY]=useState(boardPos.y.get())
@@ -36,6 +36,7 @@ const UserMouse = ({userId}:{userId:string}) => {
     transition={{duration: 0.1, ease: "linear"}}
     >
       <BsCursorFill className="-rotate-90"/>
+      <span className='ml-2'>{userName}</span>
     </motion.div>
   )
 }

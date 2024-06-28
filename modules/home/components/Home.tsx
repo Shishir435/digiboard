@@ -6,9 +6,10 @@ import React, { FormEvent, useEffect, useState } from "react";
 import NotFoundModal from "../modals/NotFound";
 
 const Home = () => {
-  const [roomId, setRoomId] = useState("");
-  const router = useRouter();
-  const setAtomRoomId = useSetRoomId();
+  const [roomId, setRoomId] = useState("")
+  const [userName,setUserName]=useState("")
+  const router = useRouter()
+  const setAtomRoomId = useSetRoomId()
   const {openModal}=useModal()
   useEffect(() => {
     socket.on("created", (roomIdFromServer) => {
@@ -30,15 +31,28 @@ const Home = () => {
     };
   }, [router,setAtomRoomId,openModal,roomId]);
   const handleCreateRoom = () => {
-    socket.emit("create_room");
+    socket.emit("create_room",userName);
   };
   const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit("join_room", roomId);
+    socket.emit("join_room", roomId,userName);
   };
   return (
     <div className="flex flex-col items-center">
       <h1 className="mt-24 font-extrabold">Digiboard</h1>
+      <div className="mt-10 flex flex-col gap-2">
+        <label className="self-start font-bold leading-tight">
+          Enter your name
+        </label>
+        <input
+          className="input"
+          id="room-id"
+          placeholder="Username..."
+          value={userName}
+          onChange={(e) => setUserName(e.target.value.slice(0, 15))}
+        />
+      </div>
+
       <form
         className="flex flex-col items-center gap-3"
         onSubmit={handleJoinRoom}
@@ -47,13 +61,13 @@ const Home = () => {
           Enter room id
         </label>
         <input
-          className=""
+          className="input"
           id="room-id"
           placeholder="room id"
           value={roomId}
           onChange={(e) => setRoomId(e.target.value)}
         />
-        <button className="" type="submit">
+        <button className="btn" type="submit">
           Join
         </button>
       </form>
@@ -66,7 +80,7 @@ const Home = () => {
       <div className="flex flex-col items-center gap-2">
         <h5 className="self-start font-bold leading-tight">Create new room</h5>
 
-        <button className="" onClick={handleCreateRoom}>
+        <button className="btn" onClick={handleCreateRoom}>
           Create
         </button>
       </div>
