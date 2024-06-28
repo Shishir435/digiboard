@@ -15,17 +15,18 @@ const Home = () => {
       setAtomRoomId(roomIdFromServer);
       router.push(roomIdFromServer);
     });
-    socket.on("joined", (roomIdFromServer, failed) => {
+    const handleJoinedRoom= (roomIdFromServer:string, failed?:boolean) => {
       if (!failed) {
         router.push(roomIdFromServer);
         setAtomRoomId(roomIdFromServer);
       } else {
         openModal(<NotFoundModal id={roomId}/>)
       }
-    });
+    }
+    socket.on("joined", handleJoinedRoom)
     return () => {
       socket.off("created");
-      socket.off("joined");
+      socket.off("joined",handleJoinedRoom);
     };
   }, [router,setAtomRoomId,openModal,roomId]);
   const handleCreateRoom = () => {
