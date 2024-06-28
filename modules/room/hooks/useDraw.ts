@@ -1,6 +1,6 @@
 import { getPos } from "@/common/lib/getPos"
 import { socket } from "@/common/lib/socket"
-import { useOptions } from "@/common/recoil/options"
+import { useOptionsValue } from "@/common/recoil/options"
 import { useMyMoves } from "@/common/recoil/rooms"
 import { useCallback, useEffect, useState } from "react"
 import { useBoardPosition } from "./useBoardPosition"
@@ -12,7 +12,7 @@ export const useDraw=(
 )=>{
     const {handleAddMyMove,handleRemoveMyMove}=useMyMoves()
     const [drawing,setDrawing]=useState(false)
-    const options=useOptions()
+    const options=useOptionsValue()
     const boardPosition=useBoardPosition()
     const movedX=boardPosition.x
     const movedY=boardPosition.y

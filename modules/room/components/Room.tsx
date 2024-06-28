@@ -6,7 +6,7 @@ import RoomContextProvider from "../context/room.context";
 import Canvas from "./Canvas";
 import MousePosition from "./MousePosition";
 import MouseRenderer from "./MouseRenderer";
-import ToolBar from "./ToolBar";
+import ToolBar from "./toolbar/ToolBar";
 
 const Room = () => {
   const room=useRoom()

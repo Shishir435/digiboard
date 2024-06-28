@@ -1,10 +1,15 @@
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { optionsAtom } from "./options.atom"
 
 
+export const useOptionsValue=()=>{
+    const optionValue=useRecoilValue(optionsAtom)
+    return optionValue
+}
+
 export const useOptions=()=>{
-    const option=useRecoilValue(optionsAtom)
-    return option
+    const useOptions=useRecoilState(optionsAtom)
+    return useOptions
 }
 
 export const useSetOptions=()=>{
