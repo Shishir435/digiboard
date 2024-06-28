@@ -1,12 +1,15 @@
 import { socket } from "@/common/lib/socket";
+import { useModal } from "@/common/recoil/modals";
 import { useSetRoomId } from "@/common/recoil/rooms";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
+import NotFoundModal from "../modals/NotFound";
 
 const Home = () => {
   const [roomId, setRoomId] = useState("");
   const router = useRouter();
   const setAtomRoomId = useSetRoomId();
+  const {openModal}=useModal()
   useEffect(() => {
     socket.on("created", (roomIdFromServer) => {
       setAtomRoomId(roomIdFromServer);
@@ -17,14 +20,14 @@ const Home = () => {
         router.push(roomIdFromServer);
         setAtomRoomId(roomIdFromServer);
       } else {
-        console.log("failed to join the room");
+        openModal(<NotFoundModal id={roomId}/>)
       }
     });
     return () => {
       socket.off("created");
       socket.off("joined");
     };
-  }, [router,setAtomRoomId]);
+  }, [router,setAtomRoomId,openModal,roomId]);
   const handleCreateRoom = () => {
     socket.emit("create_room");
   };
