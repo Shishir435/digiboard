@@ -3,13 +3,13 @@ import { useRoom } from '@/common/recoil/rooms'
 import { socket } from '@/common/lib/socket'
 
 const MouseRenderer = () => {
-  const room=useRoom()
+  const {users}=useRoom()
 
   return (
     <>
-    {[...room.users.keys()].map((userId)=>{
+    {[...users.keys()].map((userId)=>{
       if(userId===socket.id) return null;
-      <UserMouse userId={userId} key={userId} userName={room.users.get(userId)|| "Anonymous"} />})}
+      <UserMouse userId={userId} key={userId} />})}
     </>
   )
 }

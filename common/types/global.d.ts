@@ -8,9 +8,13 @@ export declare global {
         options: CtxOptions
     }
 
+    interface User {
+        name: string;
+        color: string;
+    }
     export interface ClientRoom {
         id: string;
-        users: Map<string,string>;
+        users: Map<string,User>;
         usersMoves: Map<string,Move[]>;
         movesWithoutUser: Move[];
         myMoves: Move[];

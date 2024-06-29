@@ -3,8 +3,10 @@ import {useBoardPosition} from '../hooks/useBoardPosition'
 import { socket } from '@/common/lib/socket'
 import {motion} from "framer-motion"
 import {BsCursorFill} from "react-icons/bs"
+import { useRoom } from '@/common/recoil/rooms'
 
-const UserMouse = ({userId,userName}:{userId:string,userName:string}) => {
+const UserMouse = ({userId}:{userId:string}) => {
+    const {users}=useRoom()
     const boardPos=useBoardPosition()
     const [x,setX]=useState(boardPos.x.get())
     const [y,setY]=useState(boardPos.y.get())
@@ -33,10 +35,11 @@ const UserMouse = ({userId,userName}:{userId:string,userName:string}) => {
   return (
     <motion.div className={`absolute top-0 left-0 text-blue-800 ${pos.x===-1 && "hidden"} pointer-events-none`}
     animate={{x:pos.x+x,y:pos.y+y}}
+    style={{color: users.get(userId)?.color}}
     transition={{duration: 0.1, ease: "linear"}}
     >
       <BsCursorFill className="-rotate-90"/>
-      <span className='ml-2'>{userName}</span>
+      <span className='ml-2'>{users.get(userId)?.name || "Anonymous"}</span>
     </motion.div>
   )
 }
