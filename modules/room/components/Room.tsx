@@ -5,6 +5,7 @@ import MousePosition from "./MousePosition";
 import MouseRenderer from "./MouseRenderer";
 import NameInput from "./NameInput";
 import ToolBar from "./toolbar/ToolBar";
+import UserList from "./UserList";
 
 const Room = () => {
   const room=useRoom()
@@ -12,6 +13,7 @@ const Room = () => {
   return (
     <RoomContextProvider>
       <div className="h-full w-full overflow-hidden relative">
+        <UserList/>
         <ToolBar />
         <Canvas />
         <MousePosition />
