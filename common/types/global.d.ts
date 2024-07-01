@@ -1,5 +1,5 @@
 export declare global {
-    export type Shape = "line" | "circle" | "rectangle"
+    export type Shape = "line" | "circle" | "rectangle" | "image";
 
     export interface CtxOptions {
         lineWidth: number;
@@ -8,7 +8,6 @@ export declare global {
         shape: Shape;
     }
     export interface Move {
-        shape: Shape;
         radius: number;
         width: number;
         height: number;
@@ -16,6 +15,7 @@ export declare global {
         options: CtxOptions;
         timestamps: number;
         eraser: boolean;
+        base64: string;
     }
 
     interface User {

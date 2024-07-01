@@ -1,14 +1,23 @@
 import { BsDownload, BsImageFill, BsThreads } from 'react-icons/bs'
+import {ImExit} from 'react-icons/im'
 import ColorPicker from './ColorPicker'
 import LineWidthPicker from './LineWidthPicker'
 import Eraser from './Eraser'
 import { FaUndo } from 'react-icons/fa'
 import ShapeSelector from './ShapeSelector'
-import useRefs from '../../hooks/useRefs'
+import {useRefs} from '../../hooks/useRefs'
 import { CANVAS_SIZE } from '@/common/constants/canvasSize'
+import { useRouter } from 'next/router'
+import { socket } from '@/common/lib/socket'
+import ImagePicker  from './ImagePicker'
 
 const ToolBar = () => {
   const {undoRef,canvasRef,bgRef}=useRefs()
+  const router=useRouter()
+  const handleExit=()=>{
+    socket.emit("leave_room")
+    router.push('/')
+  }
   const handleDownload=()=>{
     const canvas=document.createElement('canvas')
     canvas.width=CANVAS_SIZE.width
@@ -34,9 +43,12 @@ const ToolBar = () => {
         <ColorPicker/>
         <LineWidthPicker/>
         <Eraser/>
-        <button className='text-xl'><BsImageFill/></button>
+        <ImagePicker/>
         <button className='text-xl'><BsThreads/></button>
         <button className='text-xl' onClick={handleDownload}><BsDownload/></button>
+        <button className="text-xl" onClick={handleExit}>
+          <ImExit />
+        </button>
     </div>
   )
 }

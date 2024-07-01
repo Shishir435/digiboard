@@ -38,14 +38,7 @@ nextApp.prepare().then(async ()=>{
         room?.usersMoves?.get(socketId)?.pop()
     }
 
-    const leaveRoom=(roomId:string,socketId:string)=>{
-        const room=rooms.get(roomId)
-        if(!room) return
-        const userMoves=room?.usersMoves.get(socketId)!
-        room?.drawed.push(...userMoves)
-        room?.users.delete(socketId)
-        console.log(room)
-    }
+    
 
     io.on("connection",(socket)=>{
 
@@ -55,7 +48,16 @@ nextApp.prepare().then(async ()=>{
             return joinedRoom
         }
         console.log("connected to server")
-
+        
+        const leaveRoom=(roomId:string,socketId:string)=>{
+            const room=rooms.get(roomId)
+            if(!room) return
+            const userMoves=room?.usersMoves.get(socketId)!
+            if(userMoves) room?.drawed.push(...userMoves)
+            room?.users.delete(socketId)
+            socket.leave(roomId)
+            console.log(room)
+        }
         socket.on("create_room",(userName)=>{
             let roomId:string
             // generate random id

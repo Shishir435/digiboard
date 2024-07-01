@@ -1,21 +1,13 @@
 import { getPos } from "@/common/lib/getPos"
 import { socket } from "@/common/lib/socket"
 import { useOptionsValue } from "@/common/recoil/options"
-import { useMyMoves, useRoom } from "@/common/recoil/rooms"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import { drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers"
 import { useBoardPosition } from "./useBoardPosition"
-import { drawAllMoves, drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers"
+import { useRefs } from './useRefs'
 
 let tempMoves:[number,number][]=[]
-const setCtxOptions=(ctx:CanvasRenderingContext2D,options:CtxOptions)=>{
-    ctx.lineJoin='round'
-    ctx.lineCap='round'
-    ctx.lineWidth=options.lineWidth
-    ctx.strokeStyle=options.lineColor
-    if(options.erase){
-        ctx.globalCompositeOperation='destination-out'
-    }
-}
+
 
 let tempRadius=0
 let tempSize={
@@ -24,53 +16,48 @@ let tempSize={
 }
 
 export const useDraw=(
-    ctx:CanvasRenderingContext2D | undefined,
     blocked: boolean,
+    drawAllMoves: ()=>void
 )=>{
-    const room=useRoom()
-    const {handleAddMyMove,handleRemoveMyMove}=useMyMoves()
+    const {canvasRef}=useRefs()
     const [drawing,setDrawing]=useState(false)
+    const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
     const options=useOptionsValue()
     const boardPosition=useBoardPosition()
     const movedX=boardPosition.x
     const movedY=boardPosition.y
     useEffect(()=>{
-        if(ctx){
-            setCtxOptions(ctx,options)
+        const newCtx=canvasRef.current?.getContext('2d')
+        if(newCtx){
+            setCtx(newCtx)
         }
-    })
-    useEffect(()=>{
-        socket.on("your_move",(move)=>{
-            handleAddMyMove(move)
-        })
-        return ()=>{
-            socket.off("your_move")
-        }
-    })
+    },[canvasRef])
 
-    const handleUndo=useCallback(()=>{
+    const setCtxOptions=()=>{
         if(ctx){
-           handleRemoveMyMove()
-            socket.emit("undo")
-        }
-    },[ctx,handleRemoveMyMove])
-
-    useEffect(()=>{
-        const handleUndoKeyBoard=(e:KeyboardEvent)=>{
-            if(e.key==='z' && e.ctrlKey){
-                handleUndo();
+            ctx.lineJoin='round'
+            ctx.lineCap='round'
+            ctx.lineWidth=options.lineWidth
+            ctx.strokeStyle=options.lineColor
+            if(options.erase){
+                ctx.globalCompositeOperation='destination-out'
+            }else{
+                ctx.globalCompositeOperation='source-over'
             }
         }
-        document.addEventListener("keydown",handleUndoKeyBoard)
-        return ()=>{
-            document.removeEventListener("keydown",handleUndoKeyBoard)
-        }
-    },[handleUndo])
+    }
+
+    const drawAndSet=()=>{
+        drawAllMoves()
+        setCtxOptions()
+    }
+   
     const handleStartDrawing=(x:number,y:number)=>{
         if(!ctx || blocked) return
         const finalX=getPos(x,movedX)
         const finalY=getPos(y,movedY)
         setDrawing(true)
+        setCtxOptions()
         ctx.beginPath()
         ctx.lineTo(finalX,finalY)
         ctx.stroke()
@@ -87,7 +74,7 @@ export const useDraw=(
 
         const move:Move={
             ...tempSize,
-            shape: options.shape,
+            base64: "",
             radius:tempRadius,
             path: tempMoves,
             options,
@@ -95,7 +82,6 @@ export const useDraw=(
             eraser: options.erase
         }
         tempMoves=[]
-        ctx.globalCompositeOperation='source-over'
         socket.emit("draw",move)
     }
 
@@ -108,17 +94,17 @@ export const useDraw=(
             case "line":
                 if(shift){
                     tempMoves=tempMoves.slice(0,1)
-                    drawAllMoves(ctx,room,options)
+                    drawAndSet()
                 }
                 drawLine(ctx,tempMoves[0],finalX,finalY,shift)
                 tempMoves.push([finalX,finalY])
                 break;
             case "circle":
-                drawAllMoves(ctx,room,options)
+                drawAndSet()
                 tempRadius=drawCircle(ctx,tempMoves[0],finalX,finalY)
                 break;
             case "rectangle":
-                drawAllMoves(ctx,room,options)
+                drawAndSet()
                 tempSize=drawRectangle(ctx,tempMoves[0],finalX,finalY,shift)
                 break;
             default:
@@ -130,8 +116,7 @@ export const useDraw=(
         handleStartDrawing,
         handleEndDrawing,
         handleDraw,
-        drawing,
-        handleUndo
+        drawing
     }
 }
 
