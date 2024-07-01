@@ -88,7 +88,7 @@ export const useSetUsers=()=>{
 export const useMyMoves=()=>{
     const [room,setRoom]=useRecoilState(roomAtom)
     const handleAddMyMove=(move:Move)=>{
-        setRoom((prev)=>({...prev,myMoves: {...prev.myMoves,move}}))
+        setRoom((prev)=>({...prev,myMoves: [...prev.myMoves,move]}))
     }
     const handleRemoveMyMove=()=>{
         const newMoves=[...room.myMoves]

@@ -26,7 +26,7 @@ export const drawAllMoves=(
   const {movesWithoutUser,usersMoves,myMoves}=room
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
   
-  const moves=[...movesWithoutUser,...(myMoves)]
+  const moves=[...movesWithoutUser,...(myMoves||[])]
 
   usersMoves.forEach((userMove)=>{
     moves.push(...userMove)
