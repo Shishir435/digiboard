@@ -1,19 +1,45 @@
 export declare global {
     export interface CtxOptions {
-        lineWidth: number,
-        lineColor: string,
+        lineWidth: number;
+        lineColor: string;
+        erase: boolean;
     }
     export interface Move {
-        path: [number,number][],
-        options: CtxOptions
+        path: [number,number][];
+        options: CtxOptions;
+        timestamps: number;
+        eraser: boolean;
     }
 
-    export type Room={users:Map<string,Move[]>,drawed:Move[]};
+    interface User {
+        name: string;
+        color: string;
+    }
+
+    interface Message {
+        id: number;
+        userId: string;
+        userName: string;
+        color: string;
+        msg: string;
+    }
+    export interface ClientRoom {
+        id: string;
+        users: Map<string,User>;
+        usersMoves: Map<string,Move[]>;
+        movesWithoutUser: Move[];
+        myMoves: Move[];
+    }
+
+    export type Room={usersMoves:Map<string,Move[]>,drawed:Move[],users: Map<string,string>};
     export interface ServerToClientEvents {
-        room: (room:Room,usersToParse:string)=>void;
+        your_move: (move:Move)=>void;
+        new_msg: (userId:string,msg:string)=>void;
+        room_exists: (exists:boolean)=>void;
+        room: (room:Room,usersMovesToParse:string,usersToParse:string)=>void;
         created: (roomId:string)=>void;
         joined: (roomId:string,failed?:boolean)=>void;
-        new_user: (userId:string)=>void;
+        new_user: (userId:string,userName:string)=>void;
         user_draw: (move:Move,userId:string) => void;
         mouse_moved: (x:number,y:number,userId:string)=>void;
         user_disconnected: (userId: string)=>void;
@@ -21,12 +47,14 @@ export declare global {
     }
     
     export interface ClientToServerEvents {
+        check_room: (roomId:string)=>void;
         draw: (move: Move) => void;
         mouse_move: (x:number,y:number)=>void;
         undo: ()=>void;
-        create_room: ()=>void;
-        join_room: (room:string)=>void;
+        create_room: (userName:string)=>void;
+        join_room: (room:string,userName:string)=>void;
         joined_room: ()=>void;
         leave_room: ()=>void;
+        send_msg: (msg:string)=>void;
     }
 }

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useBoardPosition } from '../hooks/useBoardPosition'
+import { useBoardPosition } from '../../hooks/useBoardPosition'
 import { useInterval, useMouse } from 'react-use'
 import { socket } from '@/common/lib/socket'
 import {motion} from 'framer-motion'
@@ -15,8 +15,8 @@ const MousePosition = () => {
             socket.emit("mouse_move",getPos(docX,x),getPos(docY,y))
             previousPos.current={x:docX,y:docY}
         }
-        // magic number 25 it will lsiten to events in every 300 miliseconds
-    },25)
+        // magic number 150 it will lsiten to events in every 300 miliseconds
+    },150)
   return (
     <motion.div
     ref={ref}

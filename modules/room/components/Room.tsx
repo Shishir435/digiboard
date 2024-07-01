@@ -1,34 +1,26 @@
-import React, { useEffect } from "react";
+import { useRoom } from "@/common/recoil/rooms";
 import RoomContextProvider from "../context/room.context";
-import Canvas from "./Canvas";
-import MousePosition from "./MousePosition";
-import MouseRenderer from "./MouseRenderer";
-import ToolBar from "./ToolBar";
-import { useRoomId } from "@/common/recoil/rooms";
-import { useModal } from "@/common/recoil/modals";
-import NotFoundModal from "@/modules/home/modals/NotFound";
-import { useRouter } from "next/router";
+
+import MousePosition from "./board/MousePosition";
+import MouseRenderer from "./board/MouseRenderer";
+import NameInput from "./NameInput";
+import ToolBar from "./toolbar/ToolBar";
+import UserList from "./UserList";
+import { useRef } from "react";
+import Canvas from "./board/Canvas";
+import Chat from "./chat/Chat";
 
 const Room = () => {
-  const roomId = useRoomId();
-  const { openModal } = useModal();
-  const router = useRouter();
-  useEffect(() => {
-    if (!roomId) {
-      openModal(
-        <NotFoundModal id={router.asPath.slice(1) || "room id not found"} />
-      );
-    }
-  }, [roomId, openModal, router.asPath]);
-
-  if (!roomId) {
-    return null; 
-  }
+  const undoRef=useRef<HTMLButtonElement>(null)
+  const room=useRoom()
+  if(!room.id) return <NameInput/>
   return (
     <RoomContextProvider>
       <div className="h-full w-full overflow-hidden relative">
-        <ToolBar />
-        <Canvas />
+        <UserList/>
+        <Chat/>
+        <ToolBar undoRef={undoRef} />
+        <Canvas undoRef={undoRef} />
         <MousePosition />
         <MouseRenderer />
       </div>
