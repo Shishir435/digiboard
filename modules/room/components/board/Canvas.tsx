@@ -11,6 +11,7 @@ import { useSocketDraw } from '@/modules/room/hooks/useSocketDraw'
 import { drawAllMoves } from '@/modules/room/helpers/canvas.helpers'
 import MiniMap from './Minimap'
 import Background from './Background'
+import { useOptionsValue } from '@/common/recoil/options'
 
 
 
@@ -23,7 +24,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
   const [,setMovedMiniMap]=useState(false)
   const {width,height}=useViewPortSize()
   const {x,y}=useBoardPosition()
-
+  const options=useOptionsValue()
   const copyCanvasToSmall=()=>{
     if(canvasRef.current && smallCanvasRef.current){
       const smallCtx=smallCanvasRef.current.getContext("2d")
@@ -72,10 +73,10 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
   },[ctx])
   useEffect(()=>{
     if(ctx){
-      drawAllMoves(ctx,room)
+      drawAllMoves(ctx,room,options)
       copyCanvasToSmall()
     }
-  },[ctx, room])
+  },[ctx, room,options])
   return (
     <div className="relative h-full w-full overflow-hidden ">
       <motion.canvas 
@@ -96,7 +97,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
       dragTransition={{power:0,timeConstant: 0}}
       onMouseDown={(e)=>handleStartDrawing(e.clientX,e.clientY)} 
       onMouseUp={handleEndDrawing} 
-      onMouseMove={(e)=>handleDraw(e.clientX,e.clientY)} 
+      onMouseMove={(e)=>handleDraw(e.clientX,e.clientY,e.shiftKey)} 
       onTouchStart={(e)=>handleStartDrawing(e.touches[0].clientX,e.touches[0].clientY)}
       onTouchEnd={handleEndDrawing}
       onTouchMove={(e)=>handleDraw(e.touches[0].clientX,e.touches[0].clientY)} 
