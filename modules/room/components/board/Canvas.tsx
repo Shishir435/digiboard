@@ -3,7 +3,7 @@ import { useViewPortSize } from '@/common/hooks/useViewPortSize'
 import { socket } from '@/common/lib/socket'
 import { useRoom } from '@/common/recoil/rooms'
 import { motion } from 'framer-motion'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useKeyPressEvent } from "react-use"
 import { useBoardPosition } from '@/modules/room/hooks/useBoardPosition'
 import { useDraw } from '@/modules/room/hooks/useDraw'
@@ -12,12 +12,14 @@ import { drawAllMoves } from '@/modules/room/helpers/canvas.helpers'
 import MiniMap from './Minimap'
 import Background from './Background'
 import { useOptionsValue } from '@/common/recoil/options'
+import useRefs from '../../hooks/useRefs'
 
 
 
-const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
+const Canvas = () => {
   const room=useRoom()
-  const canvasRef=useRef<HTMLCanvasElement>(null)
+  const {undoRef,canvasRef,bgRef}=useRefs()
+
   const smallCanvasRef=useRef<HTMLCanvasElement>(null)
   const [dragging,setDragging]=useState(false)
   const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
@@ -25,7 +27,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
   const {width,height}=useViewPortSize()
   const {x,y}=useBoardPosition()
   const options=useOptionsValue()
-  const copyCanvasToSmall=()=>{
+  const copyCanvasToSmall=useCallback(()=>{
     if(canvasRef.current && smallCanvasRef.current){
       const smallCtx=smallCanvasRef.current.getContext("2d")
       if(smallCtx){
@@ -33,7 +35,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
         smallCtx.drawImage(canvasRef.current,0,0,CANVAS_SIZE.width,CANVAS_SIZE.height)
       }
     }
-  } 
+  } ,[canvasRef,smallCanvasRef])
  
   const {
     handleDraw,
@@ -58,7 +60,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
     undoBtn?.removeEventListener('click', handleUndo)
     window.removeEventListener("keyup",handleKeyUp)
   }
-  }, [dragging,undoRef,handleUndo])
+  }, [dragging,undoRef,handleUndo,canvasRef])
   useKeyPressEvent('Control',(e)=>{
     if(e.ctrlKey && !dragging){
       setDragging(true)
@@ -76,7 +78,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
       drawAllMoves(ctx,room,options)
       copyCanvasToSmall()
     }
-  },[ctx, room,options])
+  },[ctx, room,options,copyCanvasToSmall])
   return (
     <div className="relative h-full w-full overflow-hidden ">
       <motion.canvas 
@@ -102,7 +104,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
       onTouchEnd={handleEndDrawing}
       onTouchMove={(e)=>handleDraw(e.touches[0].clientX,e.touches[0].clientY)} 
       />
-      <Background/>
+      <Background bgRef={bgRef} />
       <MiniMap ref={smallCanvasRef} dragging={dragging} setMovedMiniMap={setMovedMiniMap} />
     </div>
   )

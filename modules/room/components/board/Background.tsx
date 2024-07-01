@@ -6,9 +6,8 @@ import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 
-const Background = () => {
+const Background = ({bgRef}:{bgRef:RefObject<HTMLCanvasElement>}) => {
   const { x, y } = useBoardPosition();
-  const bgRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const ctx = bgRef.current?.getContext("2d");
 
@@ -34,7 +33,7 @@ const Background = () => {
         ctx.stroke();
       }
     }
-  }, []);
+  }, [bgRef]);
 
   return (
     <motion.canvas

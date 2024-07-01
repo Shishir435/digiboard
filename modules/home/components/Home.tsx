@@ -30,6 +30,10 @@ const Home = () => {
       socket.off("joined",handleJoinedRoom);
     };
   }, [router,setAtomRoomId,openModal,roomId]);
+  useEffect(()=>{
+    socket.emit("leave_room")
+    setAtomRoomId("")
+  },[setAtomRoomId])
   const handleCreateRoom = () => {
     socket.emit("create_room",userName);
   };
