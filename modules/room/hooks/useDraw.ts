@@ -22,6 +22,17 @@ export const useDraw=(
             ctx.lineCap="round",
             ctx.lineWidth=options.lineWidth
             ctx.strokeStyle=options.lineColor
+            if(options.erase){
+                ctx.globalCompositeOperation='destination-out'
+            }
+        }
+    })
+    useEffect(()=>{
+        socket.on("your_move",(move)=>{
+            handleAddMyMove(move)
+        })
+        return ()=>{
+            socket.off("your_move")
         }
     })
 
@@ -59,10 +70,12 @@ export const useDraw=(
         ctx.closePath()
         const move:Move={
             path: tempMoves,
-            options
+            options,
+            timestamps: 0,
+            eraser: options.erase
         }
         tempMoves=[]
-        handleAddMyMove(move)
+        ctx.globalCompositeOperation='source-over'
         socket.emit("draw",move)
     }
 

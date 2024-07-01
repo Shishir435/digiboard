@@ -1,42 +1,23 @@
-import { CANVAS_SIZE } from "@/common/constants/canvasSize"
-
 export const handleMove=(
     move:Move,
     ctx: CanvasRenderingContext2D
   )=>{
     const {options,path}=move
-    const tempCtx=ctx
-    if(tempCtx){
-      tempCtx.lineWidth=options.lineWidth
-      tempCtx.strokeStyle=options.lineColor
+      if(move.eraser){
+        ctx.globalCompositeOperation='destination-out'
+      }
+      ctx.lineWidth=options.lineWidth
+      ctx.strokeStyle=options.lineColor
 
-      tempCtx.beginPath()
+      ctx.beginPath()
       path.forEach(([x,y])=>{
-        tempCtx.lineTo(x,y)
+        ctx.lineTo(x,y)
       })
-      tempCtx.stroke()
-      tempCtx.closePath()
-    }
+      ctx.stroke()
+      ctx.closePath()
+      ctx.globalCompositeOperation='source-over'
 }
 
-
-export const drawBackground=(ctx:CanvasRenderingContext2D)=>{
-  ctx.lineWidth=1
-  ctx.strokeStyle="#ccc"
-
-  for(let i=0; i<CANVAS_SIZE.height;i+=25){
-    ctx.beginPath()
-    ctx.moveTo(0,i)
-    ctx.lineTo(ctx.canvas.width,i)
-    ctx.stroke()
-  }
-  for(let i=0; i<CANVAS_SIZE.width;i+=25){
-    ctx.beginPath()
-    ctx.moveTo(i,0)
-    ctx.lineTo(i,ctx.canvas.height)
-    ctx.stroke()
-  }
-}
 
 export const drawAllMoves=(
   ctx:CanvasRenderingContext2D,
@@ -44,17 +25,12 @@ export const drawAllMoves=(
 )=>{
   const {movesWithoutUser,usersMoves,myMoves}=room
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-  drawBackground(ctx)
-  movesWithoutUser.forEach((move)=>handleMove(move,ctx))
+  
+  const moves=[...movesWithoutUser,...(myMoves)]
 
   usersMoves.forEach((userMove)=>{
-    userMove.forEach((move)=>handleMove(move,ctx))
+    moves.push(...userMove)
   })
-  // TODO: fix this issue
-  // myMoves.forEach((move) => handleMove(move, ctx))
-  if (Array.isArray(myMoves)) {
-    // myMoves.forEach((move) => handleMove(move, ctx));
-  } else {
-    console.log('myMoves is not an array:', myMoves);
-  }
+  moves.sort((a,b)=>a.timestamps-b.timestamps)
+  moves.forEach((move)=>handleMove(move,ctx))
 }

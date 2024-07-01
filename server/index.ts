@@ -110,8 +110,11 @@ nextApp.prepare().then(async ()=>{
         socket.on("draw",(move)=>{
             const roomId=getRoomId()
             console.log(roomId,"drawing")
-            addMove(roomId,socket.id,move)
-            socket.broadcast.to(roomId).emit("user_draw",move,socket.id)
+            const timestamps=Date.now()
+            const newMove={...move,timestamps}
+            addMove(roomId,socket.id,newMove)
+            io.to(socket.id).emit("your_move",newMove)
+            socket.broadcast.to(roomId).emit("user_draw",newMove,socket.id)
         })
 
         socket.on("undo",()=>{
@@ -119,6 +122,10 @@ nextApp.prepare().then(async ()=>{
             console.log(roomId,"undo")
             undoMove(roomId,socket.id)
             socket.broadcast.to(roomId).emit("user_undo",socket.id)
+        })
+
+        socket.on("send_msg",(msg)=>{
+          io.to(getRoomId()).emit("new_msg",socket.id,msg)
         })
 
         socket.on("mouse_move",(x,y)=>{
