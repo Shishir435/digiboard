@@ -17,7 +17,7 @@ export declare global {
     }
 
     interface Message {
-        id: string;
+        id: number;
         userId: string;
         userName: string;
         color: string;
