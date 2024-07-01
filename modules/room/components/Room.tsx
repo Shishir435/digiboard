@@ -8,6 +8,7 @@ import ToolBar from "./toolbar/ToolBar";
 import UserList from "./UserList";
 import { useRef } from "react";
 import Canvas from "./board/Canvas";
+import Chat from "./chat/Chat";
 
 const Room = () => {
   const undoRef=useRef<HTMLButtonElement>(null)
@@ -17,6 +18,7 @@ const Room = () => {
     <RoomContextProvider>
       <div className="h-full w-full overflow-hidden relative">
         <UserList/>
+        <Chat/>
         <ToolBar undoRef={undoRef} />
         <Canvas undoRef={undoRef} />
         <MousePosition />
