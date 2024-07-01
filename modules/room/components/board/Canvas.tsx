@@ -96,7 +96,7 @@ const Canvas = ({undoRef}:{undoRef:RefObject<HTMLButtonElement>}) => {
       dragTransition={{power:0,timeConstant: 0}}
       onMouseDown={(e)=>handleStartDrawing(e.clientX,e.clientY)} 
       onMouseUp={handleEndDrawing} 
-      onMouseMove={(e)=>handleDraw(e.clientX,e.clientY)} 
+      onMouseMove={(e)=>handleDraw(e.clientX,e.clientY,e.shiftKey)} 
       onTouchStart={(e)=>handleStartDrawing(e.touches[0].clientX,e.touches[0].clientY)}
       onTouchEnd={handleEndDrawing}
       onTouchMove={(e)=>handleDraw(e.touches[0].clientX,e.touches[0].clientY)} 
