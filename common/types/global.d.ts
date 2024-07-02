@@ -8,14 +8,23 @@ export declare global {
         shape: Shape;
     }
     export interface Move {
-        radius: number;
-        width: number;
-        height: number;
+        circle: {
+            cX: number;
+            cY: number;
+            radiusX: number;
+            radiusY: number;
+        };
+        rectangle: {
+            width: number;
+            height: number;
+        };
+        image: {
+            base64: string;
+        }
         path: [number,number][];
         options: CtxOptions;
         timestamps: number;
         eraser: boolean;
-        base64: string;
         id: string;
     }
 

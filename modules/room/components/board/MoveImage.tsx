@@ -21,9 +21,19 @@ const MoveImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];
 
     const move: Move = {
-      width: 0,
-      height: 0,
-      radius: 0,
+      rectangle: {
+        width: 0,
+        height: 0,
+      },
+      circle: {
+        cX: 0,
+        cY: 0,
+        radiusX: 0,
+        radiusY: 0,
+      },
+      image: {
+        base64: moveImage,
+      },
       path: [[finalX,finalY]],
       options: {
        lineWidth: 1,
@@ -33,7 +43,7 @@ const MoveImage = () => {
       },
       timestamps: 0,
       eraser: false,
-      base64: moveImage,
+      id: ""
     };
 
     socket.emit("draw", move);

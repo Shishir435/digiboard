@@ -5,11 +5,17 @@ import { useEffect, useState } from "react"
 import { drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers"
 import { useBoardPosition } from "./useBoardPosition"
 import { useRefs } from './useRefs'
+import { useSetSavedMoves } from "@/common/recoil/savedMoves"
 
 let tempMoves:[number,number][]=[]
 
 
-let tempRadius=0
+let tempCircle={
+    cX: 0,
+    cY: 0,
+    radiusX: 0,
+    radiusY: 0,
+}
 let tempSize={
     width: 0,
     height: 0
@@ -24,6 +30,7 @@ export const useDraw=(
     const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
     const options=useOptionsValue()
     const boardPosition=useBoardPosition()
+    const {clearSavedMove}=useSetSavedMoves()
     const movedX=boardPosition.x
     const movedY=boardPosition.y
     useEffect(()=>{
@@ -73,13 +80,10 @@ export const useDraw=(
 
         setDrawing(false)
         ctx.closePath()
-        if(options.shape!=='circle') tempRadius=0
-        if(options.shape!=='rectangle') tempSize={width:0,height:0}
-
         const move:Move={
-            ...tempSize,
-            base64: "",
-            radius:tempRadius,
+            rectangle: {...tempSize},
+            image: {base64: ""},
+            circle: {...tempCircle},
             path: tempMoves,
             options,
             timestamps: 0,
@@ -87,7 +91,7 @@ export const useDraw=(
             id: ""
         }
         tempMoves=[]
-        tempRadius=0
+        tempCircle={cX: 0,cY: 0,radiusX: 0,radiusY: 0}
         tempSize={width: 0, height: 0}
         tempImageData=undefined
         socket.emit("draw",move)
@@ -109,7 +113,7 @@ export const useDraw=(
                 break;
             case "circle":
                 drawAndSet()
-                tempRadius=drawCircle(ctx,tempMoves[0],finalX,finalY)
+                tempCircle=drawCircle(ctx,tempMoves[0],finalX,finalY)
                 break;
             case "rectangle":
                 drawAndSet()

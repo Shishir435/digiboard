@@ -1,18 +1,18 @@
-import { BsDownload, BsImageFill, BsThreads } from 'react-icons/bs'
-import {ImExit} from 'react-icons/im'
-import ColorPicker from './ColorPicker'
-import LineWidthPicker from './LineWidthPicker'
-import Eraser from './Eraser'
-import { FaUndo } from 'react-icons/fa'
-import ShapeSelector from './ShapeSelector'
-import {useRefs} from '../../hooks/useRefs'
 import { CANVAS_SIZE } from '@/common/constants/canvasSize'
-import { useRouter } from 'next/router'
 import { socket } from '@/common/lib/socket'
-import ImagePicker  from './ImagePicker'
+import { useRouter } from 'next/router'
+import { BsDownload, BsThreads } from 'react-icons/bs'
+import { ImExit } from 'react-icons/im'
+import { useRefs } from '../../hooks/useRefs'
+import ColorPicker from './ColorPicker'
+import Eraser from './Eraser'
+import HistoryBtns from './HistrotyBtns'
+import ImagePicker from './ImagePicker'
+import LineWidthPicker from './LineWidthPicker'
+import ShapeSelector from './ShapeSelector'
 
 const ToolBar = () => {
-  const {undoRef,canvasRef,bgRef}=useRefs()
+  const {canvasRef,bgRef}=useRefs()
   const router=useRouter()
   const handleExit=()=>{
     socket.emit("leave_room")
@@ -35,10 +35,8 @@ const ToolBar = () => {
   }
   return (
     <div className="absolute top-[50%] left-10 z-50 flex flex-col items-center rounded-lg p-5 gap-5 bg-zinc-900 text-white" style={{transform: 'translateY(-50%)'}}>
-        <button ref={undoRef}>
-          <FaUndo/>
-        </button>
-        <div className="h-px w-full bg-white 2xl:hidden" />
+        <HistoryBtns/>
+        <div className="h-px w-full bg-white" />
         <ShapeSelector/>
         <ColorPicker/>
         <LineWidthPicker/>

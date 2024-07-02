@@ -2,11 +2,12 @@ import { socket } from "@/common/lib/socket"
 import { useMyMoves, useRoom } from "@/common/recoil/rooms"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRefs } from "./useRefs"
-
+import { useSetSavedMoves } from "@/common/recoil/savedMoves"
 let prevMovesLength=0
 export const useMovesHandlers = () => {
     const { canvasRef, miniMapRef } = useRefs()
     const room = useRoom()
+    const {removeSavedMove,addSavedMove}=useSetSavedMoves()
     const { handleAddMyMove, handleRemoveMyMove } = useMyMoves()
     const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
@@ -50,6 +51,7 @@ export const useMovesHandlers = () => {
             ctx.lineWidth = moveOptions.lineWidth
             ctx.strokeStyle = moveOptions.lineColor
             if (move.eraser) ctx.globalCompositeOperation = 'destination-out'
+            else ctx.globalCompositeOperation='source-over'
             switch (moveOptions.shape) {
                 case "line":
                     ctx.beginPath()
@@ -60,14 +62,16 @@ export const useMovesHandlers = () => {
                     ctx.closePath()
                     break;
                 case "circle":
+                    const {cX,cY,radiusX,radiusY}=move.circle
                     ctx.beginPath()
-                    ctx.arc(path[0][0], path[0][1], move.radius, 0, 2 * Math.PI);
+                    ctx.ellipse(cX,cY,radiusX,radiusY,0, 0, 2 * Math.PI);
                     ctx.stroke()
                     ctx.closePath()
                     break;
                 case "rectangle":
+                    const {height,width}=move.rectangle
                     ctx.beginPath()
-                    ctx.rect(path[0][0], path[0][1], move.width, move.height)
+                    ctx.rect(path[0][0], path[0][1],width,height)
                     ctx.stroke()
                     ctx.closePath()
                     break;
@@ -84,7 +88,7 @@ export const useMovesHandlers = () => {
         const images= await Promise.all(sortedMoves.filter((move)=>move.options.shape==='circle').map((move)=>{
             return new Promise<HTMLImageElement>((resolve)=>{
                 const img= new Image()
-                img.src=move.base64
+                img.src=move.image.base64
                 img.id=move.id
                 img.addEventListener('load',()=>{
                     return resolve(img)
@@ -100,7 +104,7 @@ export const useMovesHandlers = () => {
             }
         })
         copyCanvasToSmall()
-    },[ctx,drawMove,sortedMoves])
+    },[ctx,drawMove,sortedMoves,copyCanvasToSmall])
 
     useEffect(()=>{
         socket.on('your_move',(move)=>{
@@ -117,7 +121,7 @@ export const useMovesHandlers = () => {
             const lastMove=sortedMoves[sortedMoves.length-1]
             if(lastMove.options.shape==='image'){
                 const img= new Image()
-                img.src=lastMove.base64
+                img.src=lastMove.image.base64
                 img.id=lastMove.id
                 img.addEventListener('load',()=>drawMove(lastMove,img))
             }else{
@@ -131,21 +135,34 @@ export const useMovesHandlers = () => {
     
     const handleUndo=useCallback(()=>{
         if(ctx){
-            handleRemoveMyMove()
+           const move= handleRemoveMyMove()
+           if(move){
+            addSavedMove(move)
+           }
             socket.emit("undo")
         }
-    },[ctx,handleRemoveMyMove])
-    useEffect(()=>{
-        const handleUndoKeyboard=(e:KeyboardEvent)=>{
-            if(e.ctrlKey && e.key==='z'){
-                handleUndo()
+    },[addSavedMove, ctx, handleRemoveMyMove])
+    const handleRedo=useCallback(()=>{
+        if(ctx){
+            const move=removeSavedMove()
+            if(move){
+                socket.emit("draw",move)
             }
         }
-        document.addEventListener('keydown',handleUndoKeyboard)
-        return ()=>{
-            document.removeEventListener('keydown',handleUndoKeyboard)
+    },[ctx,removeSavedMove])
+    useEffect(()=>{
+        const handleUndoRedoKeyboard=(e:KeyboardEvent)=>{
+            if(e.ctrlKey && e.key==='z'){
+                handleUndo()
+            }else if(e.key==='y' && e.ctrlKey){
+                handleRedo()
+            }
         }
-    }, [handleUndo])
+        document.addEventListener('keydown',handleUndoRedoKeyboard)
+        return ()=>{
+            document.removeEventListener('keydown',handleUndoRedoKeyboard)
+        }
+    }, [handleUndo,handleRedo])
 
-    return {drawAllMoves,drawMove,handleUndo}
+    return {drawAllMoves,drawMove,handleUndo,handleRedo}
 }
