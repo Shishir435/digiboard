@@ -33,7 +33,7 @@ const MoveImage = () => {
       },
       timestamps: 0,
       eraser: false,
-      base64: moveImage
+      base64: moveImage,
     };
 
     socket.emit("draw", move);

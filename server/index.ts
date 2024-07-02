@@ -1,7 +1,7 @@
 import {createServer} from "http"
 import express from "express"
 import next, {NextApiHandler} from "next"
-
+import {v4 as uuid} from 'uuid'
 const port=parseInt(process.env.PORT || "3000")
 const dev=process.env.NODE_ENV !=="production"
 
@@ -113,6 +113,7 @@ nextApp.prepare().then(async ()=>{
             const roomId=getRoomId()
             console.log(roomId,"drawing")
             const timestamps=Date.now()
+            move.id =uuid()
             const newMove={...move,timestamps}
             addMove(roomId,socket.id,newMove)
             io.to(socket.id).emit("your_move",newMove)

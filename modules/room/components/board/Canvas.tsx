@@ -16,7 +16,7 @@ import MiniMap from './Minimap'
 
 const Canvas = () => {
   const {undoRef,canvasRef,bgRef}=useRefs()
-  const {drawAllMoves,handleUndo}=useMovesHandlers()
+  const {handleUndo}=useMovesHandlers()
   const [dragging,setDragging]=useState(false)
   const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
   const [,setMovedMiniMap]=useState(false)
@@ -29,7 +29,7 @@ const Canvas = () => {
     handleEndDrawing,
     handleStartDrawing,
     drawing
-  }=useDraw(dragging,drawAllMoves)
+  }=useDraw(dragging)
   
   useEffect(()=>{
     const newCtx=canvasRef.current?.getContext("2d")

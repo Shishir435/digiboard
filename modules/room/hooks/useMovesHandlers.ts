@@ -33,26 +33,18 @@ export const useMovesHandlers = () => {
         }
     },[canvasRef,miniMapRef])
 
-    const drawMove = useCallback((move: Move) => {
-        new Promise((resolve) => {
+    const drawMove = useCallback((move: Move,image?:HTMLImageElement) => {
+     
             const { path } = move
             if (!ctx && !path.length) {
-                resolve('bye')
                 return
             }
             const moveOptions = move.options
-            if (moveOptions.shape === 'image') {
-                const image = new Image()
-                image.src = move.base64
-                image.addEventListener('load', () => {
-                    ctx?.drawImage(image, path[0][0], path[0][1])
-                    copyCanvasToSmall()
-                    resolve('bye')
-                })
-                return
+
+            if (moveOptions.shape === 'image' && image) {
+                ctx?.drawImage(image,path[0][0],path[0][1])
             }
             if (!ctx) {
-                resolve('bye')
                 return
             }
             ctx.lineWidth = moveOptions.lineWidth
@@ -83,16 +75,31 @@ export const useMovesHandlers = () => {
                     break;
             }
             copyCanvasToSmall()
-            resolve('bye')
-        })
+        
     },[copyCanvasToSmall,ctx])
 
     const drawAllMoves=useCallback(async()=>{
         if(!ctx) return;
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-        for(const move of sortedMoves){
-            await drawMove(move)
-        }
+        const images= await Promise.all(sortedMoves.filter((move)=>move.options.shape==='circle').map((move)=>{
+            return new Promise<HTMLImageElement>((resolve)=>{
+                const img= new Image()
+                img.src=move.base64
+                img.id=move.id
+                img.addEventListener('load',()=>{
+                    return resolve(img)
+                })
+
+            })
+        }))
+        sortedMoves.forEach((move)=>{
+            if(move.options.shape==='image'){
+                const img=images.find((image)=>image.id===move.id)
+                if(img) drawMove(move,img)
+                else drawMove(move)
+            }
+        })
+        copyCanvasToSmall()
     },[ctx,drawMove,sortedMoves])
 
     useEffect(()=>{
@@ -107,7 +114,15 @@ export const useMovesHandlers = () => {
         if(prevMovesLength >=sortedMoves.length || !prevMovesLength){
             drawAllMoves()
         }else{
-            drawMove(sortedMoves[sortedMoves.length-1])
+            const lastMove=sortedMoves[sortedMoves.length-1]
+            if(lastMove.options.shape==='image'){
+                const img= new Image()
+                img.src=lastMove.base64
+                img.id=lastMove.id
+                img.addEventListener('load',()=>drawMove(lastMove,img))
+            }else{
+                drawMove(lastMove)
+            }
         }
         return ()=>{
             prevMovesLength=sortedMoves.length

@@ -14,10 +14,10 @@ let tempSize={
     width: 0,
     height: 0
 }
+let tempImageData:ImageData | undefined
 
 export const useDraw=(
-    blocked: boolean,
-    drawAllMoves: ()=>void
+    blocked: boolean
 )=>{
     const {canvasRef}=useRefs()
     const [drawing,setDrawing]=useState(false)
@@ -48,8 +48,12 @@ export const useDraw=(
     }
 
     const drawAndSet=()=>{
-        drawAllMoves()
-        setCtxOptions()
+        if(!tempImageData){
+            tempImageData=ctx?.getImageData(0,0,ctx.canvas.width,ctx.canvas.height);
+        }
+        if(tempImageData){
+            ctx?.putImageData(tempImageData,0,0)
+        }
     }
    
     const handleStartDrawing=(x:number,y:number)=>{
@@ -79,9 +83,13 @@ export const useDraw=(
             path: tempMoves,
             options,
             timestamps: 0,
-            eraser: options.erase
+            eraser: options.erase,
+            id: ""
         }
         tempMoves=[]
+        tempRadius=0
+        tempSize={width: 0, height: 0}
+        tempImageData=undefined
         socket.emit("draw",move)
     }
 

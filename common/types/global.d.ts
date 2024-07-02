@@ -16,6 +16,7 @@ export declare global {
         timestamps: number;
         eraser: boolean;
         base64: string;
+        id: string;
     }
 
     interface User {
