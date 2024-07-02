@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers"
 import { useBoardPosition } from "./useBoardPosition"
 import { useRefs } from './useRefs'
-import { useSetSavedMoves } from "@/common/recoil/savedMoves"
 
 let tempMoves:[number,number][]=[]
 
@@ -30,7 +29,6 @@ export const useDraw=(
     const [ctx,setCtx]=useState<CanvasRenderingContext2D>()
     const options=useOptionsValue()
     const boardPosition=useBoardPosition()
-    const {clearSavedMove}=useSetSavedMoves()
     const movedX=boardPosition.x
     const movedY=boardPosition.y
     useEffect(()=>{
@@ -69,9 +67,11 @@ export const useDraw=(
         const finalY=getPos(y,movedY)
         setDrawing(true)
         setCtxOptions()
-        ctx.beginPath()
-        ctx.lineTo(finalX,finalY)
-        ctx.stroke()
+        if(options.shape==='line'){
+            ctx.beginPath()
+            ctx.lineTo(finalX,finalY)
+            ctx.stroke()
+        }
         tempMoves.push([finalX,finalY])
     }
 
@@ -101,22 +101,17 @@ export const useDraw=(
         if(!ctx || !drawing || blocked) return;
         const finalX=getPos(x,movedX)
         const finalY=getPos(y,movedY)
-        
+        drawAndSet()
         switch(options.shape){
             case "line":
-                if(shift){
-                    tempMoves=tempMoves.slice(0,1)
-                    drawAndSet()
-                }
+                if(shift) tempMoves=tempMoves.slice(0,1)
                 drawLine(ctx,tempMoves[0],finalX,finalY,shift)
                 tempMoves.push([finalX,finalY])
                 break;
             case "circle":
-                drawAndSet()
                 tempCircle=drawCircle(ctx,tempMoves[0],finalX,finalY)
                 break;
             case "rectangle":
-                drawAndSet()
                 tempSize=drawRectangle(ctx,tempMoves[0],finalX,finalY,shift)
                 break;
             default:
