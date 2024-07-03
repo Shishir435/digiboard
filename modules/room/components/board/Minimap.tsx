@@ -23,10 +23,10 @@ const MiniMap=({dragging, setMovedMiniMap }:MiniMapProps) => {
 
     useEffect(() => {
       miniX.onChange((newX) => {
-        if (!dragging) x.set(-newX * 7);
+        if (!dragging) x.set(Math.floor(-newX * 7));
       });
       miniY.onChange((newY) => {
-        if (!dragging) y.set(-newY * 7);
+        if (!dragging) y.set(Math.floor(-newY * 7));
       });
 
       return () => {
@@ -37,7 +37,7 @@ const MiniMap=({dragging, setMovedMiniMap }:MiniMapProps) => {
 
     return (
       <div
-        className="absolute right-10 top-10 z-30 bg-zinc-50 overflow-hidden rounded-lg shadow-lg "
+        className="absolute right-10 top-10 z-30 overflow-hidden rounded-lg shadow-lg "
         ref={containerRef}
         style={{
           width: CANVAS_SIZE.width / 7,
