@@ -10,14 +10,14 @@ const HistoryBtns = () => {
   return (
     <>
       <button
-        className="text-xl disabled:opacity-25"
+        className="text-xl"
         ref={redoRef}
         disabled={!savedMoves.length}
       >
         <FaRedo />
       </button>
       <button
-        className="text-xl disabled:opacity-25"
+        className="text-xl"
         ref={undoRef}
         disabled={!myMoves.length}
       >

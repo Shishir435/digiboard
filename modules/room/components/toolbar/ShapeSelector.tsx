@@ -33,6 +33,7 @@ const ShapeSelector = () => {
       <button
         className="btn-icon text-2xl"
         onClick={() => setOpened((prev) => !prev)}
+        disabled={options.mode!='draw'}
       >
         {options.shape === "circle" && <BsCircle />}
         {options.shape === "rectangle" && <BiRectangle />}
