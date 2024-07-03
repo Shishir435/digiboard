@@ -3,8 +3,6 @@ import { useRoom } from "@/common/recoil/rooms";
 import { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-
-
 const ShareModal = () => {
   const { id } = useRoom();
   const { closeModal } = useModal();

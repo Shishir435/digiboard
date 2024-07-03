@@ -36,7 +36,7 @@ const ImagePicker = () => {
     });
   };
   return (
-    <button className="text-xl" onClick={handleImageInput}>
+    <button className="btn-icon text-xl" onClick={handleImageInput}>
       <BsFillImageFill />
     </button>
   );

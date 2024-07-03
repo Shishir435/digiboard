@@ -13,7 +13,6 @@ const ModePicker = () => {
 
   useEffect(() => {
     clearSelection();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options.mode]);
 
   return (

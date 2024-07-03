@@ -30,6 +30,7 @@ const UserMouse = ({ userId }: { userId: string }) => {
     socket.on("new_msg", handleNewMsg);
     return () => {
       socket.off("mouse_moved");
+      socket.off("new_msg", handleNewMsg);
     };
   }, [userId]);
 

@@ -11,8 +11,6 @@ import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 import { useMyMoves } from "@/common/recoil/rooms";
 
 let tempMoves:[number,number][]=[]
-
-
 let tempCircle={
     cX: 0,
     cY: 0,
@@ -25,9 +23,7 @@ let tempSize={
 }
 let tempImageData:ImageData | undefined
 
-export const useDraw=(
-    blocked: boolean
-)=>{
+export const useDraw=(blocked: boolean)=>{
     const [drawing,setDrawing]=useState(false)
     const {clearSavedMove}=useSetSavedMoves()
     const options=useOptionsValue()
@@ -77,6 +73,35 @@ export const useDraw=(
         tempMoves.push([finalX,finalY])
     }
 
+    const handleDraw=(x:number,y:number,shift?:boolean)=>{
+        if(!ctx || !drawing || blocked) return;
+        const [finalX,finalY]=[getPos(x,movedX),getPos(y,movedY)]
+        
+        drawAndSet()
+        if(options.mode==='select'){
+            ctx.fillStyle='rgba(0,0,0,0.2)'
+            drawRectangle(ctx,tempMoves[0],finalX,finalY,false,true)
+            tempMoves.push([finalX,finalY])
+            setCtxOptions()
+            return
+        }
+        switch(options.shape){
+            case "line":
+                if(shift) tempMoves=tempMoves.slice(0,1)
+                drawLine(ctx,tempMoves[0],finalX,finalY,shift)
+                tempMoves.push([finalX,finalY])
+                break;
+            case "circle":
+                tempCircle=drawCircle(ctx,tempMoves[0],finalX,finalY)
+                break;
+            case "rectangle":
+                tempSize=drawRectangle(ctx,tempMoves[0],finalX,finalY,shift)
+                break;
+            default:
+                break;
+        }
+    }
+    
     const clearOnYourMove=()=>{
         drawAndSet()
         tempImageData=undefined
@@ -108,7 +133,7 @@ export const useDraw=(
                 height+=4
                 y-=2
             }
-            if((width <4 && width >4) && (height>4 && height<4)){
+            if((width <4 || width >4) && (height>4 || height<4)){
                 setSelection({x,y,width,height})
             }else{
                 clearSelection()
@@ -133,35 +158,6 @@ export const useDraw=(
         }
     }
 
-    const handleDraw=(x:number,y:number,shift?:boolean)=>{
-        if(!ctx || !drawing || blocked) return;
-        const finalX=getPos(x,movedX)
-        const finalY=getPos(y,movedY)
-        drawAndSet()
-        if(options.mode==='select'){
-            ctx.fillStyle='rgba(0,0,0,0.2)'
-            drawRectangle(ctx,tempMoves[0],finalX,finalY,false,true)
-            tempMoves.push([finalX,finalY])
-            setCtxOptions()
-            return
-        }
-        switch(options.shape){
-            case "line":
-                if(shift) tempMoves=tempMoves.slice(0,1)
-                drawLine(ctx,tempMoves[0],finalX,finalY,shift)
-                tempMoves.push([finalX,finalY])
-                break;
-            case "circle":
-                tempCircle=drawCircle(ctx,tempMoves[0],finalX,finalY)
-                break;
-            case "rectangle":
-                tempSize=drawRectangle(ctx,tempMoves[0],finalX,finalY,shift)
-                break;
-            default:
-                break;
-        }
-    }
-    
     return {
         handleStartDrawing,
         handleEndDrawing,

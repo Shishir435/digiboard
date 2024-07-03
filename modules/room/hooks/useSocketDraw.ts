@@ -1,12 +1,10 @@
 import { socket } from "@/common/lib/socket"
 import { useSetUsers } from "@/common/recoil/rooms"
 import { useEffect } from "react"
-import { useCtx } from "./useCtx"
 
 
-export const useSocketDraw = (
-    drawing: boolean
-) => {
+
+export const useSocketDraw = (drawing: boolean) => {
     const { handleAddMoveToUser, handleRemoveMoveFromUser } = useSetUsers()
     
     useEffect(() => {

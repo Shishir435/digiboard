@@ -25,14 +25,15 @@ const ToolBar = () => {
   const { width } = useViewPortSize();
   const [opened, setOpened] = useState(false);
   const { openModal } = useModal();
-  const handleExit = () => {
-    // socket.emit("leave_room")
-    router.push("/");
-  };
   useEffect(() => {
     if (width >= 1024) setOpened(true);
     else setOpened(false);
   }, [width]);
+  const handleExit = () => {
+    // socket.emit("leave_room")
+    router.push("/");
+  };
+  
   const handleShare = () => openModal(<ShareModal />);
   const handleDownload = () => {
     const canvas = document.createElement("canvas");

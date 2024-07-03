@@ -20,14 +20,14 @@ const MiniMap=({dragging}:MiniMapProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const {miniMapRef}=useRefs()
     const { height, width } = useViewPortSize();
-    const miniX = useMotionValue(0);
-    const miniY = useMotionValue(0);
+
 
     useEffect(() => {
         if(!draggingMiniMap){
           const unsubscribe = boardPos.x.onChange(setX);
           return unsubscribe;
         }
+        return ()=>{}
     }, [boardPos.x,draggingMiniMap]);
   
     useEffect(() => {
@@ -35,8 +35,11 @@ const MiniMap=({dragging}:MiniMapProps) => {
         const unsubscribe = boardPos.y.onChange(setY);
         return unsubscribe;
       }
+      return ()=>{}
     }, [boardPos.y,draggingMiniMap])
 
+    const miniX = useMotionValue(0);
+    const miniY = useMotionValue(0);
     const divider = useMemo(() => {
       if (width > 1600) return 7;
       if (width > 1000) return 10;
@@ -81,8 +84,8 @@ const MiniMap=({dragging}:MiniMapProps) => {
           dragTransition={{ power: 0, timeConstant: 0 }}
           onDragStart={() => setDraggingMiniMap(true)}
           onDragEnd={() => setDraggingMiniMap(false)}
-          className="absolute top-0 right-0 cursor-grab rounded-lg border-2 border-red-500"
-          style={{ width: width / 7, height: height / 7, x: miniX, y: miniY }}
+          className="absolute top-0 left-0 cursor-grab rounded-lg border-2 border-red-500"
+          style={{ width: width / divider, height: height / divider, x: miniX, y: miniY }}
           animate={{ x: -x / divider, y: -y/divider }}
           transition={{ duration: 0 }}
         ></motion.div>

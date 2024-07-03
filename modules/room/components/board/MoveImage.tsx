@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { motion, useMotionValue } from "framer-motion";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
@@ -21,9 +20,9 @@ const MoveImage = () => {
 
   useEffect(()=>{
     if(moveImage.x) imageX.set(moveImage.x)
-      else imageX.set(50)
+    else imageX.set(50)
     if(moveImage.y) imageY.set(moveImage.y)
-      else imageY.set(50)
+    else imageY.set(50)
   },[imageX,imageY,moveImage.x, moveImage.y])
 
   const handlePlaceImage = () => {
@@ -38,6 +37,7 @@ const MoveImage = () => {
       options: {
         ...DEFAULT_MOVE.options,
         shape: 'image',
+        selection: null,
       }
     };
 

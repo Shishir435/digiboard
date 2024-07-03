@@ -22,13 +22,10 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
 
 
   useEffect(() => {
-
     const callback = async () => {
-      await drawAllMoves();
-      setTimeout(() => {
-
-
-        if (ctx && selection) {
+      if (ctx && selection) {
+        await drawAllMoves();
+        setTimeout(() => {
           const { x, y, width, height } = selection;
 
           ctx.lineWidth = 2;
@@ -42,10 +39,13 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
           ctx.closePath();
 
           ctx.setLineDash([]);
-        }
-      },10)
+        }, 10)
+      }
     }
-    if (tempSelection.width !== selection?.width || tempSelection.height !== selection.height || tempSelection.x !== selection.x || tempSelection.y !== selection.y) {
+    if (tempSelection.width !== selection?.width || 
+      tempSelection.height !== selection.height || 
+      tempSelection.x !== selection.x || 
+      tempSelection.y !== selection.y) {
       callback()
     }
     return () => {

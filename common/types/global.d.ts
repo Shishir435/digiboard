@@ -51,7 +51,11 @@ export declare global {
         myMoves: Move[];
     }
 
-    export type Room={usersMoves:Map<string,Move[]>,drawed:Move[],users: Map<string,string>};
+    export type Room={
+        usersMoves:Map<string,Move[]>;
+        drawed:Move[];
+        users: Map<string,string>
+    };
     export interface ServerToClientEvents {
         your_move: (move:Move)=>void;
         new_msg: (userId:string,msg:string)=>void;

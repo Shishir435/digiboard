@@ -22,7 +22,7 @@ const LineWidthPicker = () => {
       <button
         className="btn-icon text-xl"
         onClick={() => setOpened(!opened)}
-        disabled={options.mode!=='draw'}
+        disabled={options.mode=='select'}
       >
         <BsBorderWidth />
       </button>

@@ -72,20 +72,21 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
       }));
     });
     socket.on("new_user", (userId, userName) => {
-      handleAddUser(userId, userName);
       toast(`${userName} has joined the room`, {
         position: "top-center",
         theme: "colored",
       });
+      handleAddUser(userId, userName);
     });
     socket.on("user_disconnected", (userId) => {
-      handleRemoveUser(userId);
       toast(`${users.get(userId)?.name || "Anonymous"} has left the room`, {
         position: "top-center",
         theme: "colored",
       });
+      handleRemoveUser(userId);
     });
     return () => {
+      socket.off("room")
       socket.off("new_user");
       socket.off("user_disconnected");
     };

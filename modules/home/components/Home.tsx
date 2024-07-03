@@ -12,6 +12,10 @@ const Home = () => {
   const setAtomRoomId = useSetRoomId();
   const { openModal } = useModal();
   useEffect(() => {
+    document.body.style.backgroundColor = "white";
+  }, []);
+  
+  useEffect(() => {
     socket.on("created", (roomIdFromServer) => {
       setAtomRoomId(roomIdFromServer);
       router.push(roomIdFromServer);

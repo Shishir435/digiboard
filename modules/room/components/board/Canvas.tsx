@@ -22,6 +22,7 @@ const Canvas = () => {
   
   const { handleDraw, handleEndDrawing, handleStartDrawing, drawing,clearOnYourMove } =
   useDraw(dragging);
+  useSocketDraw(drawing);
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
   useEffect(()=>{
     setDragging(false)
@@ -45,7 +46,6 @@ const Canvas = () => {
     };
   }, [dragging, undoRef,redoRef,handleRedo, handleUndo, canvasRef]);
   
-  useSocketDraw(drawing);
 
   useEffect(() => {
     if (ctx) {

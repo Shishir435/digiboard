@@ -1,7 +1,5 @@
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useSetRecoilState } from "recoil"
 import { modalAtom } from "./modals.atom"
-
-
 
 export const useModal=()=>{
     const setModal=useSetRecoilState(modalAtom)

@@ -12,10 +12,6 @@ export const useSetRoom=()=>{
     return setRoom
 }
 
-export const useRoomId=()=>{
-    const {id}=useRecoilValue(roomAtom)
-    return id
-}
 
 export const useSetRoomId=()=>{
    const setRoomId=useSetRecoilState(roomAtom)
@@ -31,9 +27,9 @@ export const useSetUsers=()=>{
         setRoom((prev)=>{
             const newUsers=prev.users
             const newUsersMoves=prev.usersMoves
-            newUsersMoves.set(userId,[])
             const color=getNextColor([...newUsers.values()].pop()?.color)
             newUsers.set(userId,{name,color})
+            newUsersMoves.set(userId,[])
             return {...prev,users:newUsers,usersMoves:newUsersMoves}
         })
     }
@@ -99,13 +95,10 @@ export const useMyMoves=()=>{
         })
     }
     const handleRemoveMyMove=()=>{
-        let move: Move | undefined;
-        setRoom((prev) => {
-            const newMoves = [...(prev.myMoves || [])];
-            move = newMoves.pop();
-            return { ...prev, myMoves: newMoves };
-        });
+        const newMoves=[...room.myMoves]
+        const move=newMoves.pop()
+        setRoom((prev) =>({...prev,myMoves:newMoves}));
         return move;
     }
-    return {handleAddMyMove,handleRemoveMyMove,myMoves: room?.myMoves || []}
+    return {handleAddMyMove,handleRemoveMyMove,myMoves: room.myMoves || []}
 }

@@ -5,12 +5,12 @@ export const useSetSavedMoves=()=>{
     const setSavedMoves=useSetRecoilState(savedMovesAtom)
     const addSavedMove=(move:Move)=>{
         if(move.options.mode==='select') return;
-        setSavedMoves((prev)=>([...prev,move]))
+        setSavedMoves((prev)=>([move,...prev]))
     }
     const removeSavedMove=()=>{
         let move: Move|undefined
         setSavedMoves((prev)=>{
-            move=prev[0]
+            move=prev.at(0)
             return prev.slice(1)
         })
         return move

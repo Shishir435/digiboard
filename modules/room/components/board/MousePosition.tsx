@@ -6,7 +6,7 @@ import {motion} from 'framer-motion'
 import { getPos } from '@/common/lib/getPos'
 
 const MousePosition = () => {
-    const previousPos=useRef<{x:number,y:number}>({x:0,y:0})
+    const previousPos=useRef({x:0,y:0})
     const {x,y}=useBoardPosition()
     const ref=useRef<HTMLDivElement>(null)
     const {docX,docY}=useMouse(ref)

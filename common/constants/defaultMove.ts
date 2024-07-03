@@ -15,7 +15,7 @@ export const DEFAULT_MOVE:Move={
     path: [],
     options: {
         shape: 'line',
-        lineColor: {r:0,g:0,b:0,a: 1},
+        lineColor: {r:0,g:0,b:0,a: 0},
         fillColor: {r:0,g:0,b:0,a: 0},
         lineWidth: 1,
         mode: 'draw',

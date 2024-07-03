@@ -7,14 +7,16 @@ import { getStringFromRgba } from './../../../common/lib/rgba';
 import { useCtx } from "./useCtx";
 import { useRefs } from "./useRefs";
 import { useSelection } from "./useSelection";
+import { useBackground } from "@/common/recoil/background";
 let prevMovesLength=0
 export const useMovesHandlers = (clearOnYourMove :()=>void) => {
-    const { canvasRef, miniMapRef } = useRefs()
+    const { canvasRef, miniMapRef, bgRef } = useRefs()
     const room = useRoom()
     const {removeSavedMove,addSavedMove}=useSetSavedMoves()
     const { handleAddMyMove, handleRemoveMyMove } = useMyMoves()
     const ctx=useCtx()
     const {clearSelection}=useSetSelection()
+    const bg = useBackground();
 
     const sortedMoves = useMemo(() => {
         const { movesWithoutUser, myMoves, usersMoves } = room
@@ -25,28 +27,25 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     }, [room])
 
     const copyCanvasToSmall = () => {
-        if (canvasRef.current && miniMapRef.current) {
+        if (canvasRef.current && miniMapRef.current && bgRef.current) {
             const smallCtx = miniMapRef.current.getContext("2d")
             if (smallCtx) {
                 smallCtx.clearRect(0, 0, smallCtx.canvas.width, smallCtx.canvas.height)
+                smallCtx.drawImage(bgRef.current, 0, 0, smallCtx.canvas.width, smallCtx.canvas.height)
                 smallCtx.drawImage(canvasRef.current, 0, 0, smallCtx.canvas.width, smallCtx.canvas.height)
             }
         }
     }
-
+    useEffect(() => copyCanvasToSmall(), [bg]);
     const drawMove = (move: Move,image?:HTMLImageElement) => {
      
             const { path } = move
-            if (!ctx && !path.length) {
+            if (!ctx || !path.length) {
                 return
             }
             const moveOptions = move.options
             if(moveOptions.mode==='select') return;
 
-            
-            if (!ctx) {
-                return
-            }
             ctx.lineWidth = moveOptions.lineWidth
             ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor)
             ctx.fillStyle = getStringFromRgba(moveOptions.fillColor)
@@ -90,7 +89,8 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     const drawAllMoves=async()=>{
         if(!ctx) return;
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-        const images= await Promise.all(sortedMoves.filter((move)=>move.options.shape==='circle').map((move)=>{
+        const images= await Promise.all(
+            sortedMoves.filter((move)=>move.options.shape==='image').map((move)=>{
             return new Promise<HTMLImageElement>((resolve)=>{
                 const img= new Image()
                 img.src=move.image.base64
@@ -161,7 +161,7 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     }
     useEffect(()=>{
         const handleUndoRedoKeyboard=(e:KeyboardEvent)=>{
-            if(e.ctrlKey && e.key==='z'){
+            if(e.key==='z' && e.ctrlKey ){
                 handleUndo()
             }else if(e.key==='y' && e.ctrlKey){
                 handleRedo()
@@ -173,5 +173,5 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
         }
     }, [handleUndo,handleRedo])
 
-    return {drawAllMoves,drawMove,handleUndo,handleRedo}
+    return {handleUndo,handleRedo}
 }
