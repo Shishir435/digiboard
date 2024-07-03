@@ -56,7 +56,6 @@ nextApp.prepare().then(async ()=>{
             if(userMoves) room?.drawed.push(...userMoves)
             room?.users.delete(socketId)
             socket.leave(roomId)
-            console.log(room)
         }
         socket.on("create_room",(userName)=>{
             let roomId:string
@@ -69,6 +68,15 @@ nextApp.prepare().then(async ()=>{
 
             rooms.set(roomId,{users: new Map([[socket.id,userName]]),drawed: [],usersMoves:new Map([[socket.id,[]]])})
             io.to(socket.id).emit("created",roomId)
+        })
+
+        socket.on("check_room",(roomId)=>{
+            if(rooms.has(roomId)){
+                socket.emit("room_exists",true)
+            }else{
+                socket.emit("room_exists",false)
+            }
+
         })
 
         socket.on("join_room",(roomId,userName)=>{
@@ -84,14 +92,6 @@ nextApp.prepare().then(async ()=>{
             }
         })
 
-        socket.on("check_room",(roomId)=>{
-            if(rooms.has(roomId)){
-                socket.emit("room_exists",true)
-            }else{
-                socket.emit("room_exists",false)
-            }
-
-        })
 
         socket.on("joined_room",()=>{
             const roomId=getRoomId()
@@ -99,7 +99,7 @@ nextApp.prepare().then(async ()=>{
 
             const room=rooms.get(roomId)
             if(!room) return
-            io.to(socket.id).emit("room",room,JSON.stringify([...room?.usersMoves]),JSON.stringify([...room?.users]))
+            io.to(socket.id).emit("room",room,JSON.stringify([...room.usersMoves]),JSON.stringify([...room?.users]))
             socket.broadcast.to(roomId).emit("new_user",socket.id,room.users.get(socket.id)||"Anonymous")
         })
         
