@@ -16,7 +16,7 @@ const ColorPicker = () => {
     <div className="relative flex items-center" ref={ref}>
       <button
         className="btn-icon"
-        disabled={options.mode!=='draw'}
+        disabled={options.mode=='select'}
         onClick={() => setOpened(!opened)}
         style={{backgroundColor: getStringFromRgba(options.lineColor)}}
       >

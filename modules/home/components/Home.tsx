@@ -6,44 +6,48 @@ import React, { FormEvent, useEffect, useState } from "react";
 import NotFoundModal from "../modals/NotFound";
 
 const Home = () => {
-  const [roomId, setRoomId] = useState("")
-  const [userName,setUserName]=useState("")
-  const router = useRouter()
-  const setAtomRoomId = useSetRoomId()
-  const {openModal}=useModal()
+  const [roomId, setRoomId] = useState("");
+  const [userName, setUserName] = useState("");
+  const router = useRouter();
+  const setAtomRoomId = useSetRoomId();
+  const { openModal } = useModal();
   useEffect(() => {
     socket.on("created", (roomIdFromServer) => {
       setAtomRoomId(roomIdFromServer);
       router.push(roomIdFromServer);
     });
-    const handleJoinedRoom= (roomIdFromServer:string, failed?:boolean) => {
+    const handleJoinedRoom = (roomIdFromServer: string, failed?: boolean) => {
       if (!failed) {
         router.push(roomIdFromServer);
         setAtomRoomId(roomIdFromServer);
       } else {
-        openModal(<NotFoundModal id={roomId}/>)
+        openModal(<NotFoundModal id={roomId} />);
       }
-    }
-    socket.on("joined", handleJoinedRoom)
+    };
+    socket.on("joined", handleJoinedRoom);
     return () => {
       socket.off("created");
-      socket.off("joined",handleJoinedRoom);
+      socket.off("joined", handleJoinedRoom);
     };
-  }, [router,setAtomRoomId,openModal,roomId]);
-  useEffect(()=>{
-    socket.emit("leave_room")
-    setAtomRoomId("")
-  },[setAtomRoomId])
+  }, [router, setAtomRoomId, openModal, roomId]);
+  useEffect(() => {
+    socket.emit("leave_room");
+    setAtomRoomId("");
+  }, [setAtomRoomId]);
   const handleCreateRoom = () => {
-    socket.emit("create_room",userName);
+    socket.emit("create_room", userName);
   };
   const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit("join_room", roomId,userName);
+    socket.emit("join_room", roomId, userName);
   };
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="mt-24 font-extrabold">Digiboard</h1>
+    <div className="flex flex-col items-center py-24">
+      <h1 className="text-5xl font-extrabold leading-tight sm:text-extra">
+        Digiboard
+      </h1>
+      <h3 className="text-xl sm:text-2xl">Real-time whiteboard</h3>
+
       <div className="mt-10 flex flex-col gap-2">
         <label className="self-start font-bold leading-tight">
           Enter your name
@@ -56,6 +60,8 @@ const Home = () => {
           onChange={(e) => setUserName(e.target.value.slice(0, 15))}
         />
       </div>
+
+      <div className="my-8 h-px w-96 bg-zinc-200" />
 
       <form
         className="flex flex-col items-center gap-3"
@@ -75,6 +81,7 @@ const Home = () => {
           Join
         </button>
       </form>
+
       <div className="my-8 flex w-96 items-center gap-2">
         <div className="h-px w-full bg-zinc-200" />
         <p className="text-zinc-400">or</p>

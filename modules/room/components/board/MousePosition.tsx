@@ -10,6 +10,7 @@ const MousePosition = () => {
     const {x,y}=useBoardPosition()
     const ref=useRef<HTMLDivElement>(null)
     const {docX,docY}=useMouse(ref)
+    const touchDevice = window.matchMedia("(pointer: coarse)").matches;
     useInterval(()=>{
         if(previousPos.current.x!==docX || previousPos.current.y!==docY){
             socket.emit("mouse_move",getPos(docX,x),getPos(docY,y))
@@ -17,6 +18,7 @@ const MousePosition = () => {
         }
         // magic number 150 it will lsiten to events in every 300 miliseconds
     },150)
+    if(touchDevice) return null;
   return (
     <motion.div
     ref={ref}
