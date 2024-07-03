@@ -1,11 +1,12 @@
+import { socket } from "@/common/lib/socket";
+import { useSetSelection } from '@/common/recoil/options';
+import { useMyMoves, useRoom } from "@/common/recoil/rooms";
+import { useSetSavedMoves } from "@/common/recoil/savedMoves";
+import { useEffect, useMemo } from "react";
 import { getStringFromRgba } from './../../../common/lib/rgba';
-import { socket } from "@/common/lib/socket"
-import { useMyMoves, useRoom } from "@/common/recoil/rooms"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { useRefs } from "./useRefs"
-import { useSetSavedMoves } from "@/common/recoil/savedMoves"
-import { useCtx } from "./useCtx"
-import { useSelection } from "./useSelection"
+import { useCtx } from "./useCtx";
+import { useRefs } from "./useRefs";
+import { useSelection } from "./useSelection";
 let prevMovesLength=0
 export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     const { canvasRef, miniMapRef } = useRefs()
@@ -13,6 +14,7 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     const {removeSavedMove,addSavedMove}=useSetSavedMoves()
     const { handleAddMyMove, handleRemoveMyMove } = useMyMoves()
     const ctx=useCtx()
+    const {clearSelection}=useSetSelection()
 
     const sortedMoves = useMemo(() => {
         const { movesWithoutUser, myMoves, usersMoves } = room
@@ -22,7 +24,7 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
         return moves
     }, [room])
 
-    const copyCanvasToSmall = useCallback(() => {
+    const copyCanvasToSmall = () => {
         if (canvasRef.current && miniMapRef.current) {
             const smallCtx = miniMapRef.current.getContext("2d")
             if (smallCtx) {
@@ -30,19 +32,18 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
                 smallCtx.drawImage(canvasRef.current, 0, 0, smallCtx.canvas.width, smallCtx.canvas.height)
             }
         }
-    },[canvasRef,miniMapRef])
+    }
 
-    const drawMove = useCallback((move: Move,image?:HTMLImageElement) => {
+    const drawMove = (move: Move,image?:HTMLImageElement) => {
      
             const { path } = move
             if (!ctx && !path.length) {
                 return
             }
             const moveOptions = move.options
+            if(moveOptions.mode==='select') return;
 
-            if (moveOptions.shape === 'image' && image) {
-                ctx?.drawImage(image,path[0][0],path[0][1])
-            }
+            
             if (!ctx) {
                 return
             }
@@ -51,6 +52,9 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
             ctx.fillStyle = getStringFromRgba(moveOptions.fillColor)
             if (move.options.mode==='eraser') ctx.globalCompositeOperation = 'destination-out'
             else ctx.globalCompositeOperation='source-over'
+            if (moveOptions.shape === 'image' && image) {
+                ctx?.drawImage(image,path[0][0],path[0][1])
+            }
             switch (moveOptions.shape) {
                 case "line":
                     ctx.beginPath()
@@ -81,9 +85,9 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
             }
             copyCanvasToSmall()
         
-    },[copyCanvasToSmall,ctx])
+    }
     
-    const drawAllMoves=useCallback(async()=>{
+    const drawAllMoves=async()=>{
         if(!ctx) return;
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
         const images= await Promise.all(sortedMoves.filter((move)=>move.options.shape==='circle').map((move)=>{
@@ -105,17 +109,19 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
             }
         })
         copyCanvasToSmall()
-    },[ctx,drawMove,sortedMoves,copyCanvasToSmall])
+    }
     useSelection(drawAllMoves)
     useEffect(()=>{
         socket.on('your_move',(move)=>{
             clearOnYourMove()
             handleAddMyMove(move)
+            setTimeout(clearSelection,100)
         })
         return ()=>{
             socket.off('your_move')
         }
-    },[handleAddMyMove,clearOnYourMove])
+    },[handleAddMyMove,clearOnYourMove,clearSelection])
+
     useEffect(()=>{
         if(prevMovesLength >=sortedMoves.length || !prevMovesLength){
             drawAllMoves()
@@ -133,25 +139,26 @@ export const useMovesHandlers = (clearOnYourMove :()=>void) => {
         return ()=>{
             prevMovesLength=sortedMoves.length
         }
-    },[sortedMoves,drawAllMoves,drawMove])
+    },[sortedMoves])
     
-    const handleUndo=useCallback(()=>{
+    const handleUndo=()=>{
         if(ctx){
            const move= handleRemoveMyMove()
-           if(move){
+           if(move?.options.mode==='select') clearSelection()
+          else if(move){
             addSavedMove(move)
            }
             socket.emit("undo")
         }
-    },[addSavedMove, ctx, handleRemoveMyMove])
-    const handleRedo=useCallback(()=>{
+    }
+    const handleRedo=()=>{
         if(ctx){
             const move=removeSavedMove()
             if(move){
                 socket.emit("draw",move)
             }
         }
-    },[ctx,removeSavedMove])
+    }
     useEffect(()=>{
         const handleUndoRedoKeyboard=(e:KeyboardEvent)=>{
             if(e.ctrlKey && e.key==='z'){

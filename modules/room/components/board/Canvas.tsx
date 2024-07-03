@@ -6,32 +6,33 @@ import { useDraw } from "@/modules/room/hooks/useDraw";
 import { useSocketDraw } from "@/modules/room/hooks/useSocketDraw";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useKeyPressEvent } from "react-use";
+import { BsArrowsMove } from "react-icons/bs";
+import { useCtx } from "../../hooks/useCtx";
 import { useMovesHandlers } from "../../hooks/useMovesHandlers";
 import { useRefs } from "../../hooks/useRefs";
 import Background from "./Background";
 import MiniMap from "./Minimap";
-import { useCtx } from "../../hooks/useCtx";
 
 const Canvas = () => {
   const { undoRef, redoRef, canvasRef, bgRef } = useRefs();
-  const [dragging, setDragging] = useState(false);
+  const [dragging, setDragging] = useState(true);
   const ctx=useCtx()
-  const [, setMovedMiniMap] = useState(false);
   const { width, height } = useViewPortSize();
   const { x, y } = useBoardPosition();
   
   const { handleDraw, handleEndDrawing, handleStartDrawing, drawing,clearOnYourMove } =
   useDraw(dragging);
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
-  
+  useEffect(()=>{
+    setDragging(false)
+  },[])
   useEffect(() => {
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (!e.ctrlKey && dragging) {
-        setDragging(false);
-      }
-    };
-    window.addEventListener("keyup", handleKeyUp);
+  
+    const handleKey=(e:KeyboardEvent)=>{
+      setDragging(e.ctrlKey)
+    }
+    window.addEventListener("keyup", handleKey);
+    window.addEventListener("keydown", handleKey);
     const undoBtn = undoRef.current;
     const redoBtn = redoRef.current;
     undoBtn?.addEventListener("click", handleUndo);
@@ -39,14 +40,11 @@ const Canvas = () => {
     return () => {
       undoBtn?.removeEventListener("click", handleUndo);
       redoBtn?.removeEventListener("click", handleRedo);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keyup", handleKey);
+      window.removeEventListener("keydown", handleKey);
     };
   }, [dragging, undoRef,redoRef,handleRedo, handleUndo, canvasRef]);
-  useKeyPressEvent("Control", (e) => {
-    if (e.ctrlKey && !dragging) {
-      setDragging(true);
-    }
-  });
+  
   useSocketDraw(drawing);
 
   useEffect(() => {
@@ -83,7 +81,15 @@ const Canvas = () => {
         }
       />
       <Background bgRef={bgRef} />
-      <MiniMap dragging={dragging} setMovedMiniMap={setMovedMiniMap} />
+      <MiniMap dragging={dragging}/>
+      <button
+        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
+          dragging ? "bg-green-500" : "bg-zinc-300 text-black"
+        } p-3 text-lg text-white`}
+        onClick={() => setDragging((prev) => !prev)}
+      >
+        <BsArrowsMove />
+      </button>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import NameInput from "./NameInput";
 import ToolBar from "./toolbar/ToolBar";
 import UserList from "./UserList";
 import MoveImage from "./board/MoveImage";
+import SelectionBtns from "./board/SelectionBtns";
 
 const Room = () => {
   const room=useRoom()
@@ -18,6 +19,7 @@ const Room = () => {
         <UserList/>
         <Chat/>
         <ToolBar/>
+        <SelectionBtns/>
         <MoveImage/>
         <Canvas/>
         <MousePosition />

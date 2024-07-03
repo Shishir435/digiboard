@@ -8,6 +8,7 @@ import { getStringFromRgba } from './../../../common/lib/rgba';
 import { useBoardPosition } from "./useBoardPosition";
 import { useCtx } from "./useCtx";
 import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
+import { useMyMoves } from "@/common/recoil/rooms";
 
 let tempMoves:[number,number][]=[]
 
@@ -34,7 +35,9 @@ export const useDraw=(
     const movedX=boardPosition.x
     const movedY=boardPosition.y
     const ctx=useCtx()
-    const {setSelection}=useSetSelection()
+    const {setSelection,clearSelection}=useSetSelection()
+    const {handleAddMyMove}=useMyMoves()
+
 
     const setCtxOptions=()=>{
         if(ctx){
@@ -84,14 +87,32 @@ export const useDraw=(
 
         setDrawing(false)
         ctx.closePath()
+        let addMove=true
         if(options.mode==='select' && tempMoves.length){
             clearOnYourMove()
-            const x=tempMoves[0][0]
-            const y=tempMoves[0][1]
-            const width=tempMoves[tempMoves.length-1][0]-x
-            const height=tempMoves[tempMoves.length-1][1]-y
-            if(width !==0 && height!==0){
+            let x=tempMoves[0][0]
+            let y=tempMoves[0][1]
+            let width=tempMoves[tempMoves.length-1][0]-x
+            let height=tempMoves[tempMoves.length-1][1]-y
+            if(width<0){
+                width-=4
+                x+=2
+            }else{
+                width+=4
+                x-=2
+            }
+            if(height<0){
+                height-=4
+                y+=2
+            }else{
+                height+=4
+                y-=2
+            }
+            if((width <4 && width >4) && (height>4 && height<4)){
                 setSelection({x,y,width,height})
+            }else{
+                clearSelection()
+                addMove=false
             }
         }
         const move:Move={
@@ -107,6 +128,8 @@ export const useDraw=(
         if(options.mode!=='select'){
             socket.emit("draw",move)
             clearSavedMove()
+        }else if (addMove){
+            handleAddMyMove(move)
         }
     }
 

@@ -9,14 +9,22 @@ import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useMoveImage } from "../../hooks/useMoveImage";
 import { useRefs } from "../../hooks/useRefs";
 import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
+import { useEffect } from "react";
 
 const MoveImage = () => {
   const { canvasRef } = useRefs();
   const { x, y } = useBoardPosition();
   const { moveImage, setMoveImage } = useMoveImage();
 
-  const imageX = useMotionValue(50);
-  const imageY = useMotionValue(50);
+  const imageX = useMotionValue(moveImage.x ||50);
+  const imageY = useMotionValue(moveImage.y || 50);
+
+  useEffect(()=>{
+    if(moveImage.x) imageX.set(moveImage.x)
+      else imageX.set(50)
+    if(moveImage.y) imageY.set(moveImage.y)
+      else imageY.set(50)
+  },[imageX,imageY,moveImage.x, moveImage.y])
 
   const handlePlaceImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];
@@ -24,7 +32,7 @@ const MoveImage = () => {
     const move: Move = {
       ...DEFAULT_MOVE,
       image: {
-        base64: moveImage
+        base64: moveImage.base64
       },
       path: [[finalX,finalY]],
       options: {
@@ -35,12 +43,12 @@ const MoveImage = () => {
 
     socket.emit("draw", move);
 
-    setMoveImage("");
+    setMoveImage({base64: ""});
     imageX.set(50);
     imageY.set(50);
   };
 
-  if (!moveImage) return null;
+  if (!moveImage.base64) return null;
 
   return (
     <motion.div
@@ -60,7 +68,7 @@ const MoveImage = () => {
         </button>
         <button
           className="rounded-full bg-gray-200 p-2"
-          onClick={() => setMoveImage("")}
+          onClick={() => setMoveImage({base64: ""})}
         >
           <AiOutlineClose />
         </button>
@@ -68,7 +76,7 @@ const MoveImage = () => {
       <img
         className="pointer-events-none"
         alt="image to place"
-        src={moveImage}
+        src={moveImage.base64}
       />
     </motion.div>
   );

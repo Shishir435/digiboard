@@ -39,7 +39,7 @@ const Home = () => {
   };
   const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit("join_room", roomId, userName);
+    if(roomId) socket.emit("join_room", roomId, userName);
   };
   return (
     <div className="flex flex-col items-center py-24">

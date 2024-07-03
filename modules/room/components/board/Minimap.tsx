@@ -2,8 +2,6 @@ import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 import { useViewPortSize } from "@/common/hooks/useViewPortSize";
 import { motion, useMotionValue } from "framer-motion";
 import {
-  Dispatch,
-  SetStateAction,
   useEffect,
   useMemo,
   useRef,
@@ -13,12 +11,12 @@ import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useRefs } from "../../hooks/useRefs";
 interface MiniMapProps {
   dragging: boolean;
-  setMovedMiniMap: Dispatch<SetStateAction<boolean>>;
 }
-const MiniMap=({dragging, setMovedMiniMap }:MiniMapProps) => {
+const MiniMap=({dragging}:MiniMapProps) => {
     const boardPos = useBoardPosition();
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
+    const [draggingMiniMap,setDraggingMiniMap]=useState(false)
     const containerRef = useRef<HTMLDivElement>(null);
     const {miniMapRef}=useRefs()
     const { height, width } = useViewPortSize();
@@ -26,14 +24,18 @@ const MiniMap=({dragging, setMovedMiniMap }:MiniMapProps) => {
     const miniY = useMotionValue(0);
 
     useEffect(() => {
-        const unsubscribe = boardPos.x.onChange(setX);
-        return unsubscribe;
-    }, [boardPos.x]);
+        if(!draggingMiniMap){
+          const unsubscribe = boardPos.x.onChange(setX);
+          return unsubscribe;
+        }
+    }, [boardPos.x,draggingMiniMap]);
   
     useEffect(() => {
+      if(!draggingMiniMap){
         const unsubscribe = boardPos.y.onChange(setY);
         return unsubscribe;
-    }, [boardPos.y])
+      }
+    }, [boardPos.y,draggingMiniMap])
 
     const divider = useMemo(() => {
       if (width > 1600) return 7;
@@ -77,8 +79,8 @@ const MiniMap=({dragging, setMovedMiniMap }:MiniMapProps) => {
           dragConstraints={containerRef}
           dragElastic={0}
           dragTransition={{ power: 0, timeConstant: 0 }}
-          onDragEnd={() => setMovedMiniMap((prev: boolean) => !prev)}
-          onDragStart={() => setMovedMiniMap((prev: boolean) => !prev)}
+          onDragStart={() => setDraggingMiniMap(true)}
+          onDragEnd={() => setDraggingMiniMap(false)}
           className="absolute top-0 right-0 cursor-grab rounded-lg border-2 border-red-500"
           style={{ width: width / 7, height: height / 7, x: miniX, y: miniY }}
           animate={{ x: -x / divider, y: -y/divider }}
