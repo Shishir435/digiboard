@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "nodemon server/index.ts",
-    "build": "next build",
-    "start": "next start",
+    "dev:client": "ts-node server/index.ts",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:next": "next build",
+    "build": "concurrently \"pnpm run build:server\" \"pnpm run build:next\"",
+    "start": "NODE_ENV=production node build/index.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -30,6 +33,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
