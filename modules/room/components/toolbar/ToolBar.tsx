@@ -10,6 +10,7 @@ import HistoryBtns from './HistrotyBtns'
 import ImagePicker from './ImagePicker'
 import LineWidthPicker from './LineWidthPicker'
 import ShapeSelector from './ShapeSelector'
+import ModePicker from './ModePicker'
 
 const ToolBar = () => {
   const {canvasRef,bgRef}=useRefs()
@@ -40,9 +41,8 @@ const ToolBar = () => {
         <ShapeSelector/>
         <ColorPicker/>
         <LineWidthPicker/>
-        <Eraser/>
         <ImagePicker/>
-        <button className='text-xl'><BsThreads/></button>
+        <ModePicker/>
         <button className='text-xl' onClick={handleDownload}><BsDownload/></button>
         <button className="text-xl" onClick={handleExit}>
           <ImExit />

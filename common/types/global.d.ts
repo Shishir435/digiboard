@@ -1,11 +1,12 @@
 export declare global {
     export type Shape = "line" | "circle" | "rectangle" | "image";
-
+    export type CtxMode="eraser" | "draw" | "select"
     export interface CtxOptions {
         lineWidth: number;
         lineColor: string;
-        erase: boolean;
         shape: Shape;
+        mode: CtxMode;
+        selection: {x:number,y:number,width:number,height:number} | null
     }
     export interface Move {
         circle: {
@@ -17,6 +18,7 @@ export declare global {
         rectangle: {
             width: number;
             height: number;
+            fill?:boolean;
         };
         image: {
             base64: string;
@@ -24,7 +26,6 @@ export declare global {
         path: [number,number][];
         options: CtxOptions;
         timestamps: number;
-        eraser: boolean;
         id: string;
     }
 

@@ -3,18 +3,15 @@ import { useMyMoves, useRoom } from "@/common/recoil/rooms"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRefs } from "./useRefs"
 import { useSetSavedMoves } from "@/common/recoil/savedMoves"
+import { useCtx } from "./useCtx"
+import { useSelection } from "./useSelection"
 let prevMovesLength=0
 export const useMovesHandlers = () => {
     const { canvasRef, miniMapRef } = useRefs()
     const room = useRoom()
     const {removeSavedMove,addSavedMove}=useSetSavedMoves()
     const { handleAddMyMove, handleRemoveMyMove } = useMyMoves()
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
-
-    useEffect(() => {
-        const newCtx = canvasRef?.current?.getContext('2d')
-        if (newCtx) setCtx(newCtx)
-    }, [canvasRef])
+    const ctx=useCtx()
 
     const sortedMoves = useMemo(() => {
         const { movesWithoutUser, myMoves, usersMoves } = room
@@ -50,7 +47,7 @@ export const useMovesHandlers = () => {
             }
             ctx.lineWidth = moveOptions.lineWidth
             ctx.strokeStyle = moveOptions.lineColor
-            if (move.eraser) ctx.globalCompositeOperation = 'destination-out'
+            if (move.options.mode==='eraser') ctx.globalCompositeOperation = 'destination-out'
             else ctx.globalCompositeOperation='source-over'
             switch (moveOptions.shape) {
                 case "line":
@@ -71,8 +68,13 @@ export const useMovesHandlers = () => {
                 case "rectangle":
                     const {height,width}=move.rectangle
                     ctx.beginPath()
-                    ctx.rect(path[0][0], path[0][1],width,height)
-                    ctx.stroke()
+                    if(move.rectangle.fill){
+                        ctx.fillRect(path[0][0], path[0][1],width,height)
+                        ctx.fill()
+                    }else{
+                        ctx.rect(path[0][0], path[0][1],width,height)
+                        ctx.stroke()
+                    }
                     ctx.closePath()
                     break;
                 default:
@@ -81,7 +83,7 @@ export const useMovesHandlers = () => {
             copyCanvasToSmall()
         
     },[copyCanvasToSmall,ctx])
-
+    
     const drawAllMoves=useCallback(async()=>{
         if(!ctx) return;
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
@@ -105,7 +107,7 @@ export const useMovesHandlers = () => {
         })
         copyCanvasToSmall()
     },[ctx,drawMove,sortedMoves,copyCanvasToSmall])
-
+    useSelection(drawAllMoves)
     useEffect(()=>{
         socket.on('your_move',(move)=>{
             handleAddMyMove(move)

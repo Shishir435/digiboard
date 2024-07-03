@@ -28,7 +28,8 @@ export const drawCircle = (
   from: [number, number],
   x: number,
   y: number,
-  shift?: boolean
+  shift?: boolean,
+  fill?:boolean
 ) => {
   ctx.beginPath();
 
