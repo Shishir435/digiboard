@@ -1,27 +1,15 @@
-import { useEffect, useMemo } from "react";
-
-import { toast } from "react-toastify";
-
-import { socket } from "@/common/lib/socket";
+import { useEffect } from "react";
 import { useOptionsValue } from "@/common/recoil/options";
-
+import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 import { useCtx } from "./useCtx";
-import { useMoveImage } from "./useMoveImage";
 import { useRefs } from "./useRefs";
 
-let tempSelection = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-};
 
 export const useSelection = (drawAllMoves: () => Promise<void>) => {
   const ctx = useCtx();
   const options = useOptionsValue();
   const { selection } = options;
   const { bgRef} = useRefs();
-  const { setMoveImage } = useMoveImage();
 
   useEffect(() => {
     
@@ -71,9 +59,8 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
       }
       if(e.ctrlKey && e.key==='Delete' && selection){
         const move:Move={
-          circle: {cX: 0, cY:0, radiusX: 0, radiusY: 0},
+          ...DEFAULT_MOVE,
           rectangle: {
-            fill:true,
             width,
             height
           },
@@ -81,11 +68,9 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
           options: {
             ...options,
             shape: 'rectangle',
-            mode: 'eraser'
+            mode: 'eraser',
+            fillColor: {r:0,g:0,b:0,a:0}
           },
-          image:{base64:''},
-          id: "",
-          timestamps: 0,
         }
       }
     }
@@ -94,35 +79,5 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
       document.removeEventListener('keydown',handleCopySelection)
     }
   },[ctx,selection,options,bgRef])
-
-  const dimension = useMemo(() => {
-    if (selection) {
-      let { x, y, width, height } = selection;
-
-      if (width < 0) {
-        width += 4;
-        x -= 2;
-      } else {
-        width -= 4;
-        x += 2;
-      }
-      if (height < 0) {
-        height += 4;
-        y -= 2;
-      } else {
-        height -= 4;
-        y += 2;
-      }
-
-      return { x, y, width, height };
-    }
-
-    return {
-      width: 0,
-      height: 0,
-      x: 0,
-      y: 0,
-    };
-  }, [selection]);
 
 };

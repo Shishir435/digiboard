@@ -15,16 +15,16 @@ import { useCtx } from "../../hooks/useCtx";
 
 const Canvas = () => {
   const { undoRef, redoRef, canvasRef, bgRef } = useRefs();
-  const { handleUndo, handleRedo } = useMovesHandlers();
   const [dragging, setDragging] = useState(false);
   const ctx=useCtx()
   const [, setMovedMiniMap] = useState(false);
   const { width, height } = useViewPortSize();
   const { x, y } = useBoardPosition();
-
-  const { handleDraw, handleEndDrawing, handleStartDrawing, drawing } =
-    useDraw(dragging);
-
+  
+  const { handleDraw, handleEndDrawing, handleStartDrawing, drawing,clearOnYourMove } =
+  useDraw(dragging);
+  const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
+  
   useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
       if (!e.ctrlKey && dragging) {

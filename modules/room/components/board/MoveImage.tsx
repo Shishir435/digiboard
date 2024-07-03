@@ -8,6 +8,7 @@ import { socket } from "@/common/lib/socket";
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useMoveImage } from "../../hooks/useMoveImage";
 import { useRefs } from "../../hooks/useRefs";
+import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 
 const MoveImage = () => {
   const { canvasRef } = useRefs();
@@ -21,29 +22,15 @@ const MoveImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];
 
     const move: Move = {
-      rectangle: {
-        width: 0,
-        height: 0,
-      },
-      circle: {
-        cX: 0,
-        cY: 0,
-        radiusX: 0,
-        radiusY: 0,
-      },
+      ...DEFAULT_MOVE,
       image: {
-        base64: moveImage,
+        base64: moveImage
       },
       path: [[finalX,finalY]],
       options: {
-       lineWidth: 1,
-       lineColor: "#000",
-       mode: 'draw',
-       shape: 'image',
-       selection: null
-      },
-      timestamps: 0,
-      id: ""
+        ...DEFAULT_MOVE.options,
+        shape: 'image',
+      }
     };
 
     socket.emit("draw", move);

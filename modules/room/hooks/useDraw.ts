@@ -1,12 +1,13 @@
-import { getPos } from "@/common/lib/getPos"
-import { socket } from "@/common/lib/socket"
-import { useOptionsValue, useSetSelection } from "@/common/recoil/options"
-import { useEffect, useState } from "react"
-import { drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers"
-import { useBoardPosition } from "./useBoardPosition"
-import { useRefs } from './useRefs'
-import { useSetSavedMoves } from "@/common/recoil/savedMoves"
-import { useCtx } from "./useCtx"
+import { getPos } from "@/common/lib/getPos";
+import { socket } from "@/common/lib/socket";
+import { useOptionsValue, useSetSelection } from "@/common/recoil/options";
+import { useSetSavedMoves } from "@/common/recoil/savedMoves";
+import { useState } from "react";
+import { drawCircle, drawLine, drawRectangle } from "../helpers/canvas.helpers";
+import { getStringFromRgba } from './../../../common/lib/rgba';
+import { useBoardPosition } from "./useBoardPosition";
+import { useCtx } from "./useCtx";
+import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 
 let tempMoves:[number,number][]=[]
 
@@ -26,7 +27,6 @@ let tempImageData:ImageData | undefined
 export const useDraw=(
     blocked: boolean
 )=>{
-    const {canvasRef}=useRefs()
     const [drawing,setDrawing]=useState(false)
     const {clearSavedMove}=useSetSavedMoves()
     const options=useOptionsValue()
@@ -38,10 +38,10 @@ export const useDraw=(
 
     const setCtxOptions=()=>{
         if(ctx){
-            ctx.lineJoin='round'
-            ctx.lineCap='round'
             ctx.lineWidth=options.lineWidth
-            ctx.strokeStyle=options.lineColor
+            ctx.strokeStyle=getStringFromRgba(options.lineColor)
+            ctx.fillStyle=getStringFromRgba(options.fillColor)
+
             if(options.mode==='eraser'){
                 ctx.globalCompositeOperation='destination-out'
             }else{
@@ -65,6 +65,7 @@ export const useDraw=(
         const finalY=getPos(y,movedY)
         setDrawing(true)
         setCtxOptions()
+        drawAndSet()
         if(options.shape==='line' && options.mode!=='select'){
             ctx.beginPath()
             ctx.lineTo(finalX,finalY)
@@ -73,13 +74,18 @@ export const useDraw=(
         tempMoves.push([finalX,finalY])
     }
 
+    const clearOnYourMove=()=>{
+        drawAndSet()
+        tempImageData=undefined
+    }
+
     const handleEndDrawing=()=>{
         if(!ctx || blocked) return
 
         setDrawing(false)
         ctx.closePath()
-        if(options.mode==='select'){
-            drawAndSet()
+        if(options.mode==='select' && tempMoves.length){
+            clearOnYourMove()
             const x=tempMoves[0][0]
             const y=tempMoves[0][1]
             const width=tempMoves[tempMoves.length-1][0]-x
@@ -89,18 +95,15 @@ export const useDraw=(
             }
         }
         const move:Move={
+            ...DEFAULT_MOVE,
             rectangle: {...tempSize},
-            image: {base64: ""},
             circle: {...tempCircle},
             path: tempMoves,
             options,
-            timestamps: 0,
-            id: ""
         }
         tempMoves=[]
         tempCircle={cX: 0,cY: 0,radiusX: 0,radiusY: 0}
         tempSize={width: 0, height: 0}
-        tempImageData=undefined
         if(options.mode!=='select'){
             socket.emit("draw",move)
             clearSavedMove()
@@ -115,8 +118,8 @@ export const useDraw=(
         if(options.mode==='select'){
             ctx.fillStyle='rgba(0,0,0,0.2)'
             drawRectangle(ctx,tempMoves[0],finalX,finalY,false,true)
-            ctx.fillStyle='rgba(0,0,0)'
             tempMoves.push([finalX,finalY])
+            setCtxOptions()
             return
         }
         switch(options.shape){
@@ -140,7 +143,8 @@ export const useDraw=(
         handleStartDrawing,
         handleEndDrawing,
         handleDraw,
-        drawing
+        drawing,
+        clearOnYourMove
     }
 }
 

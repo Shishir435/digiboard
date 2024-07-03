@@ -1,3 +1,4 @@
+import { getStringFromRgba } from './../../../common/lib/rgba';
 import { socket } from "@/common/lib/socket"
 import { useMyMoves, useRoom } from "@/common/recoil/rooms"
 import { useCallback, useEffect, useMemo, useState } from "react"
@@ -6,7 +7,7 @@ import { useSetSavedMoves } from "@/common/recoil/savedMoves"
 import { useCtx } from "./useCtx"
 import { useSelection } from "./useSelection"
 let prevMovesLength=0
-export const useMovesHandlers = () => {
+export const useMovesHandlers = (clearOnYourMove :()=>void) => {
     const { canvasRef, miniMapRef } = useRefs()
     const room = useRoom()
     const {removeSavedMove,addSavedMove}=useSetSavedMoves()
@@ -46,7 +47,8 @@ export const useMovesHandlers = () => {
                 return
             }
             ctx.lineWidth = moveOptions.lineWidth
-            ctx.strokeStyle = moveOptions.lineColor
+            ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor)
+            ctx.fillStyle = getStringFromRgba(moveOptions.fillColor)
             if (move.options.mode==='eraser') ctx.globalCompositeOperation = 'destination-out'
             else ctx.globalCompositeOperation='source-over'
             switch (moveOptions.shape) {
@@ -63,18 +65,15 @@ export const useMovesHandlers = () => {
                     ctx.beginPath()
                     ctx.ellipse(cX,cY,radiusX,radiusY,0, 0, 2 * Math.PI);
                     ctx.stroke()
+                    ctx.fill()
                     ctx.closePath()
                     break;
                 case "rectangle":
                     const {height,width}=move.rectangle
                     ctx.beginPath()
-                    if(move.rectangle.fill){
-                        ctx.fillRect(path[0][0], path[0][1],width,height)
-                        ctx.fill()
-                    }else{
-                        ctx.rect(path[0][0], path[0][1],width,height)
-                        ctx.stroke()
-                    }
+                    ctx.rect(path[0][0], path[0][1],width,height)
+                    ctx.stroke()
+                    ctx.fill()
                     ctx.closePath()
                     break;
                 default:
@@ -110,12 +109,13 @@ export const useMovesHandlers = () => {
     useSelection(drawAllMoves)
     useEffect(()=>{
         socket.on('your_move',(move)=>{
+            clearOnYourMove()
             handleAddMyMove(move)
         })
         return ()=>{
             socket.off('your_move')
         }
-    },[handleAddMyMove])
+    },[handleAddMyMove,clearOnYourMove])
     useEffect(()=>{
         if(prevMovesLength >=sortedMoves.length || !prevMovesLength){
             drawAllMoves()
