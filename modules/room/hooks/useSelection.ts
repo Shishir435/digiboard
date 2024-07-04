@@ -1,11 +1,14 @@
 import { useEffect, useMemo } from "react";
-import { useOptionsValue } from "@/common/recoil/options";
-import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
-import { useCtx } from "./useCtx";
-import { useRefs } from "./useRefs";
-import { useMoveImage } from "./useMoveImage";
-import { socket } from "@/common/lib/socket";
+
 import { toast } from "react-toastify";
+
+import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
+import { socket } from "@/common/lib/socket";
+import { useOptionsValue } from "@/common/recoil/options";
+
+import { useCtx } from "./useCtx";
+import { useMoveImage } from "./useMoveImage";
+import { useRefs } from "./useRefs";
 
 let tempSelection = {
   x: 0,
@@ -13,18 +16,19 @@ let tempSelection = {
   width: 0,
   height: 0,
 };
+
 export const useSelection = (drawAllMoves: () => Promise<void>) => {
   const ctx = useCtx();
   const options = useOptionsValue();
   const { selection } = options;
   const { bgRef, selectionRefs } = useRefs();
-  const { setMoveImage } = useMoveImage()
-
+  const { setMoveImage } = useMoveImage();
 
   useEffect(() => {
     const callback = async () => {
       if (ctx && selection) {
         await drawAllMoves();
+
         setTimeout(() => {
           const { x, y, width, height } = selection;
 
@@ -39,18 +43,22 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
           ctx.closePath();
 
           ctx.setLineDash([]);
-        }, 10)
+        }, 10);
       }
-    }
-    if (tempSelection.width !== selection?.width || 
-      tempSelection.height !== selection.height || 
-      tempSelection.x !== selection.x || 
-      tempSelection.y !== selection.y) {
-      callback()
-    }
+    };
+
+    if (
+      tempSelection.width !== selection?.width ||
+      tempSelection.height !== selection?.height ||
+      tempSelection.x !== selection?.x ||
+      tempSelection.y !== selection?.y
+    )
+      callback();
+
     return () => {
-      if (selection) tempSelection = selection
-    }
+      if (selection) tempSelection = selection;
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection, ctx]);
 
@@ -84,6 +92,7 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
     };
   }, [selection]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const makeBlob = async (withBg?: boolean) => {
     if (!selection) return null;
 
@@ -125,6 +134,7 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
     return null;
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const createDeleteMove = () => {
     if (!selection) return null;
 
@@ -147,14 +157,14 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
 
     const move: Move = {
       ...DEFAULT_MOVE,
-      rectangle: {
+      rect: {
         width,
         height,
       },
       path: [[x, y]],
       options: {
         ...options,
-        shape: "rectangle",
+        shape: "rect",
         mode: "eraser",
         fillColor: { r: 0, g: 0, b: 0, a: 1 },
       },
@@ -165,6 +175,7 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
     return move;
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCopy = async () => {
     const blob = await makeBlob(true);
 
@@ -237,7 +248,7 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
       };
     }
 
-    return () => { };
+    return () => {};
   }, [
     createDeleteMove,
     dimension,
@@ -247,5 +258,4 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
     selectionRefs,
     setMoveImage,
   ]);
-
 };

@@ -1,50 +1,64 @@
+import { FormEvent, useEffect, useState } from "react";
+
+import { useRouter } from "next/router";
+
 import { socket } from "@/common/lib/socket";
 import { useModal } from "@/common/recoil/modals";
 import { useSetRoomId } from "@/common/recoil/rooms";
-import { useRouter } from "next/router";
-import React, { FormEvent, useEffect, useState } from "react";
+
 import NotFoundModal from "../modals/NotFound";
 
 const Home = () => {
-  const [roomId, setRoomId] = useState("");
-  const [userName, setUserName] = useState("");
-  const router = useRouter();
-  const setAtomRoomId = useSetRoomId();
   const { openModal } = useModal();
+  const setAtomRoomId = useSetRoomId();
+
+  const [roomId, setRoomId] = useState("");
+  const [username, setUsername] = useState("");
+
+  const router = useRouter();
+
   useEffect(() => {
     document.body.style.backgroundColor = "white";
   }, []);
-  
+
   useEffect(() => {
     socket.on("created", (roomIdFromServer) => {
       setAtomRoomId(roomIdFromServer);
       router.push(roomIdFromServer);
     });
+
     const handleJoinedRoom = (roomIdFromServer: string, failed?: boolean) => {
       if (!failed) {
-        router.push(roomIdFromServer);
         setAtomRoomId(roomIdFromServer);
+        router.push(roomIdFromServer);
       } else {
         openModal(<NotFoundModal id={roomId} />);
       }
     };
+
     socket.on("joined", handleJoinedRoom);
+
     return () => {
       socket.off("created");
       socket.off("joined", handleJoinedRoom);
     };
-  }, [router, setAtomRoomId, openModal, roomId]);
+  }, [openModal, roomId, router, setAtomRoomId]);
+
   useEffect(() => {
     socket.emit("leave_room");
     setAtomRoomId("");
   }, [setAtomRoomId]);
+
   const handleCreateRoom = () => {
-    socket.emit("create_room", userName);
+    socket.emit("create_room", username);
   };
+
   const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(roomId) socket.emit("join_room", roomId, userName);
+
+    if (roomId) socket.emit("join_room", roomId, username);
   };
+
   return (
     <div className="flex flex-col items-center py-24">
       <h1 className="text-5xl font-extrabold leading-tight sm:text-extra">
@@ -60,8 +74,8 @@ const Home = () => {
           className="input"
           id="room-id"
           placeholder="Username..."
-          value={userName}
-          onChange={(e) => setUserName(e.target.value.slice(0, 15))}
+          value={username}
+          onChange={(e) => setUsername(e.target.value.slice(0, 15))}
         />
       </div>
 
@@ -77,7 +91,7 @@ const Home = () => {
         <input
           className="input"
           id="room-id"
-          placeholder="room id"
+          placeholder="Room id..."
           value={roomId}
           onChange={(e) => setRoomId(e.target.value)}
         />

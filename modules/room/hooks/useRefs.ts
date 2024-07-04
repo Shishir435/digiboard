@@ -1,7 +1,17 @@
-import { useContext } from 'react'
-import { RoomContext } from '../context/room.context'
+import { useContext } from "react";
+
+import { roomContext } from "../context/room.context";
 
 export const useRefs = () => {
-  const {bgRef,canvasRef,undoRef,redoRef,miniMapRef,selectionRefs}=useContext(RoomContext)
-  return {bgRef,undoRef,redoRef,canvasRef,miniMapRef,selectionRefs}
-}
+  const { undoRef, bgRef, canvasRef, minimapRef, redoRef, selectionRefs } =
+    useContext(roomContext);
+
+  return {
+    undoRef,
+    redoRef,
+    bgRef,
+    canvasRef,
+    minimapRef,
+    selectionRefs,
+  };
+};

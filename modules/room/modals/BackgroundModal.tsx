@@ -1,14 +1,13 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useBackground, useSetBackground } from "@/common/recoil/background";
 import { useModal } from "@/common/recoil/modals";
-import { useEffect } from "react";
+
 
 
 const BackgroundModal = () => {
   const { closeModal } = useModal();
   const setBackground = useSetBackground();
   const bg=useBackground()
-  useEffect(() => closeModal, [bg, closeModal]);
   const renderBg = (
     ref: HTMLCanvasElement | null,
     mode: "dark" | "light",

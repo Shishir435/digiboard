@@ -1,27 +1,37 @@
-import { useRecoilValue, useSetRecoilState } from "recoil"
-import { savedMovesAtom } from "./savedMoves.atom"
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-export const useSetSavedMoves=()=>{
-    const setSavedMoves=useSetRecoilState(savedMovesAtom)
-    const addSavedMove=(move:Move)=>{
-        if(move.options.mode==='select') return;
-        setSavedMoves((prev)=>([move,...prev]))
-    }
-    const removeSavedMove=()=>{
-        let move: Move|undefined
-        setSavedMoves((prev)=>{
-            move=prev.at(0)
-            return prev.slice(1)
-        })
-        return move
-    }
-    const clearSavedMove=()=>{
-        setSavedMoves([])
-    }
-    return {addSavedMove,removeSavedMove,clearSavedMove}
-}
+import { savedMovesAtom } from "./savedMoves.atom";
 
-export const useSavedMoves=()=>{
-    const savedMoves=useRecoilValue(savedMovesAtom)
-    return savedMoves
-}
+export const useSetSavedMoves = () => {
+  const setSavedMoves = useSetRecoilState(savedMovesAtom);
+
+  const addSavedMove = (move: Move) => {
+    if (move.options.mode === "select") return;
+
+    setSavedMoves((prevMoves) => [move, ...prevMoves]);
+  };
+
+  const removeSavedMove = () => {
+    let move: Move | undefined;
+
+    setSavedMoves((prevMoves) => {
+      move = prevMoves.at(0);
+
+      return prevMoves.slice(1);
+    });
+
+    return move;
+  };
+
+  const clearSavedMoves = () => {
+    setSavedMoves([]);
+  };
+
+  return { addSavedMove, removeSavedMove, clearSavedMoves };
+};
+
+export const useSavedMoves = () => {
+  const savedMoves = useRecoilValue(savedMovesAtom);
+
+  return savedMoves;
+};

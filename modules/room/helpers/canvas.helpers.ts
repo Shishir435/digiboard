@@ -28,7 +28,7 @@ export const drawCircle = (
   from: [number, number],
   x: number,
   y: number,
-  shift?: boolean,
+  shift?: boolean
 ) => {
   ctx.beginPath();
 
@@ -48,8 +48,7 @@ export const drawCircle = (
   return { cX, cY, radiusX, radiusY };
 };
 
-
-export const drawRectangle = (
+export const drawRect = (
   ctx: CanvasRenderingContext2D,
   from: [number, number],
   x: number,

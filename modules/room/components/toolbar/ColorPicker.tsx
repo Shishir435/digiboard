@@ -1,24 +1,29 @@
-import { useOptions } from '@/common/recoil/options'
-import { AnimatePresence,motion } from 'framer-motion'
-import React, { useRef, useState } from 'react'
-import { BsPaletteFill } from 'react-icons/bs'
-import { useClickAway } from 'react-use'
-import {RgbaColorPicker} from 'react-colorful'
-import { ColorPickerAnimation } from '../../animations/colorPicker.animations'
-import { getStringFromRgba } from '@/common/lib/rgba'
+import { useRef, useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { RgbaColorPicker } from "react-colorful";
+import { BsPaletteFill } from "react-icons/bs";
+import { useClickAway } from "react-use";
+
+import { useOptions } from "@/common/recoil/options/options.hook";
+
+import { EntryAnimation } from "../../animations/colorPicker.animations";
 
 const ColorPicker = () => {
-    const [options,setOptions]=useOptions()
-    const ref=useRef<HTMLDivElement>(null)
-    const [opened,setOpened]=useState(false)
-    useClickAway(ref,()=>setOpened(false))
+  const [options, setOptions] = useOptions();
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [opened, setOpened] = useState(false);
+
+  useClickAway(ref, () => setOpened(false));
+
   return (
     <div className="relative flex items-center" ref={ref}>
       <button
         className="btn-icon"
-        disabled={options.mode=='select'}
         onClick={() => setOpened(!opened)}
-        style={{backgroundColor: getStringFromRgba(options.lineColor)}}
+        disabled={options.mode === "select"}
       >
         <BsPaletteFill />
       </button>
@@ -26,7 +31,7 @@ const ColorPicker = () => {
         {opened && (
           <motion.div
             className="absolute left-10 mt-24 sm:left-14"
-            variants={ColorPickerAnimation}
+            variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"
@@ -34,24 +39,33 @@ const ColorPicker = () => {
             <h2 className="ml-3 font-semibold text-black dark:text-white">
               Line color
             </h2>
-            <RgbaColorPicker 
-            color={options.lineColor}
-            onChange={(e)=>setOptions({...options,lineColor: e})}
-            className='mb-5'
+            <RgbaColorPicker
+              color={options.lineColor}
+              onChange={(e) => {
+                setOptions({
+                  ...options,
+                  lineColor: e,
+                });
+              }}
+              className="mb-5"
             />
             <h2 className="ml-3 font-semibold text-black dark:text-white">
               Fill color
             </h2>
-            <RgbaColorPicker 
-            color={options.fillColor}
-            onChange={(e)=>setOptions({...options,fillColor: e})}
+            <RgbaColorPicker
+              color={options.fillColor}
+              onChange={(e) => {
+                setOptions({
+                  ...options,
+                  fillColor: e,
+                });
+              }}
             />
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  );
+};
 
-  )
-}
-
-export default ColorPicker
+export default ColorPicker;

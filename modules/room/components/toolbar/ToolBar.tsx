@@ -1,58 +1,69 @@
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { useEffect, useState } from "react";
+
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { BsDownload } from "react-icons/bs";
+import { FiChevronRight } from "react-icons/fi";
+import { HiOutlineDownload } from "react-icons/hi";
 import { ImExit } from "react-icons/im";
-import { FiChevronRight } from 'react-icons/fi'
 import { IoIosShareAlt } from "react-icons/io";
+
+import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { DEFAULT_EASE } from "@/common/constants/easings";
+
+import { useModal } from "@/common/recoil/modals";
+
 import { useRefs } from "../../hooks/useRefs";
+import ShareModal from "../../modals/ShareModal";
+
 import ColorPicker from "./ColorPicker";
-import HistoryBtns from "./HistrotyBtns";
+
 import ImagePicker from "./ImagePicker";
 import LineWidthPicker from "./LineWidthPicker";
 import ModePicker from "./ModePicker";
 import ShapeSelector from "./ShapeSelector";
-import ShareModal from "../../modals/ShareModal";
-import { useModal } from "@/common/recoil/modals";
-import BackgroundPicker from "./BackgroundPicker";
-import {motion} from 'framer-motion'
 import { useViewPortSize } from "@/common/hooks/useViewPortSize";
-import { useEffect, useState } from "react";
-import { DEFAULT_EASE } from "@/common/constants/easings";
+import HistoryBtns from "./HistrotyBtns";
+import BackgroundPicker from "./BackgroundPicker";
 
 const ToolBar = () => {
   const { canvasRef, bgRef } = useRefs();
-  const router = useRouter();
-  const { width } = useViewPortSize();
-  const [opened, setOpened] = useState(false);
   const { openModal } = useModal();
+  const { width } = useViewPortSize();
+
+  const [opened, setOpened] = useState(false);
+
+  const router = useRouter();
+
   useEffect(() => {
     if (width >= 1024) setOpened(true);
     else setOpened(false);
   }, [width]);
-  const handleExit = () => {
-    // socket.emit("leave_room")
-    router.push("/");
-  };
-  
-  const handleShare = () => openModal(<ShareModal />);
+
+  const handleExit = () => router.push("/");
+
   const handleDownload = () => {
     const canvas = document.createElement("canvas");
     canvas.width = CANVAS_SIZE.width;
     canvas.height = CANVAS_SIZE.height;
 
     const tempCtx = canvas.getContext("2d");
+
     if (tempCtx && canvasRef.current && bgRef.current) {
       tempCtx.drawImage(bgRef.current, 0, 0);
       tempCtx.drawImage(canvasRef.current, 0, 0);
     }
+
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
     link.download = "canvas.png";
     link.click();
   };
+
+  const handleShare = () => openModal(<ShareModal />);
+
   return (
     <>
-        <motion.button
+      <motion.button
         className="btn-icon absolute bottom-1/2 -left-2 z-50 h-10 w-10 rounded-full bg-black text-2xl transition-none lg:hidden"
         animate={{ rotate: opened ? 0 : 180 }}
         transition={{ duration: 0.2, ease: DEFAULT_EASE }}
@@ -91,7 +102,7 @@ const ToolBar = () => {
           <IoIosShareAlt />
         </button>
         <button className="btn-icon text-2xl" onClick={handleDownload}>
-          <BsDownload />
+          <HiOutlineDownload />
         </button>
         <button className="btn-icon text-xl" onClick={handleExit}>
           <ImExit />
