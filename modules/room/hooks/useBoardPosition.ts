@@ -1,8 +1,9 @@
-import { useContext } from "react"
-import { RoomContext } from "../context/room.context"
+import { useContext } from "react";
 
+import { roomContext } from "../context/room.context";
 
-export const useBoardPosition=()=>{
-    const {x,y}=useContext(RoomContext)
-    return {x,y}
-}
+export const useBoardPosition = () => {
+  const { x, y } = useContext(roomContext);
+
+  return { x, y };
+};
