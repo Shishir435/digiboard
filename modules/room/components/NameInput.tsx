@@ -61,7 +61,7 @@ const NameInput = () => {
       onSubmit={handleJoinRoom}
     >
       <h1 className="text-5xl font-extrabold leading-tight sm:text-extra">
-        Collabio
+        Digiboard
       </h1>
       <h3 className="text-xl sm:text-2xl">Real-time whiteboard</h3>
 
