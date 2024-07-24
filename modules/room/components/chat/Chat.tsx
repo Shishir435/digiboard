@@ -7,11 +7,10 @@ import { useList } from "react-use";
 
 import { DEFAULT_EASE } from "@/common/constants/easings";
 import { socket } from "@/common/lib/socket";
-
+import { useRoom } from "@/common/recoil/rooms";
 
 import ChatInput from "./ChatInput";
 import Message from "./Message";
-import { useRoom } from "@/common/recoil/rooms";
 
 const Chat = () => {
   const room = useRoom();
@@ -30,7 +29,7 @@ const Chat = () => {
         userId,
         msg,
         id: msgs.length + 1,
-        userName: user?.name || "Anonymous",
+        username: user?.name || "Anonymous",
         color: user?.color || "#000",
       });
 

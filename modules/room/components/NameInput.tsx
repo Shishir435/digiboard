@@ -3,9 +3,9 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { socket } from "@/common/lib/socket";
-import NotFoundModal from "@/modules/home/modals/NotFound";
-import { useSetRoomId } from "@/common/recoil/rooms";
 import { useModal } from "@/common/recoil/modals";
+import { useSetRoomId } from "@/common/recoil/rooms";
+import NotFoundModal from "@/modules/home/modals/NotFound";
 
 const NameInput = () => {
   const setRoomId = useSetRoomId();
@@ -14,7 +14,7 @@ const NameInput = () => {
   const [name, setName] = useState("");
 
   const router = useRouter();
-  const roomId = (router.query.roomId || "").toString();
+  const roomId = (router.query.roomid || "").toString();
 
   useEffect(() => {
     if (!roomId) return;
@@ -27,6 +27,7 @@ const NameInput = () => {
       }
     });
 
+    // eslint-disable-next-line consistent-return
     return () => {
       socket.off("room_exists");
     };

@@ -1,40 +1,45 @@
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useEffect } from "react";
 
 import { motion } from "framer-motion";
 
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { useBackground } from "@/common/recoil/background";
 
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 
-const Background = () => {
+const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
+  const bg = useBackground();
   const { x, y } = useBoardPosition();
-  const bgRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     const ctx = bgRef.current?.getContext("2d");
 
     if (ctx) {
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = bg.mode === "dark" ? "#222" : "#fff";
       ctx.fillRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
 
-      document.body.style.backgroundColor = "#fff";
+      document.body.style.backgroundColor =
+        bg.mode === "dark" ? "#222" : "#fff";
 
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#ddd";
-      for (let i = 0; i < CANVAS_SIZE.height; i += 25) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(ctx.canvas.width, i);
-        ctx.stroke();
-      }
+      if (bg.lines) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = bg.mode === "dark" ? "#444" : "#ddd";
+        for (let i = 0; i < CANVAS_SIZE.height; i += 25) {
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.lineTo(ctx.canvas.width, i);
+          ctx.stroke();
+        }
 
-      for (let i = 0; i < CANVAS_SIZE.width; i += 25) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, ctx.canvas.height);
-        ctx.stroke();
+        for (let i = 0; i < CANVAS_SIZE.width; i += 25) {
+          ctx.beginPath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i, ctx.canvas.height);
+          ctx.stroke();
+        }
       }
     }
-  }, []);
+  }, [bgRef, bg]);
 
   return (
     <motion.canvas

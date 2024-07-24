@@ -1,6 +1,6 @@
 import { socket } from "@/common/lib/socket";
 
-const Message = ({ userId, msg, userName, color }: Message) => {
+const Message = ({ userId, msg, username, color }: Message) => {
   const me = socket.id === userId;
 
   return (
@@ -9,7 +9,7 @@ const Message = ({ userId, msg, userName, color }: Message) => {
     >
       {!me && (
         <h5 style={{ color }} className="font-bold">
-          {userName}
+          {username}
         </h5>
       )}
       <p style={{ wordBreak: "break-all" }}>{msg}</p>

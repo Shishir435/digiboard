@@ -1,7 +1,7 @@
 import {createServer} from "http"
 import express from "express"
 import next, {NextApiHandler} from "next"
-
+import {v4 as uuid} from 'uuid'
 const port=parseInt(process.env.PORT || "3000")
 const dev=process.env.NODE_ENV !=="production"
 
@@ -38,14 +38,7 @@ nextApp.prepare().then(async ()=>{
         room?.usersMoves?.get(socketId)?.pop()
     }
 
-    const leaveRoom=(roomId:string,socketId:string)=>{
-        const room=rooms.get(roomId)
-        if(!room) return
-        const userMoves=room?.usersMoves.get(socketId)!
-        room?.drawed.push(...userMoves)
-        room?.users.delete(socketId)
-        console.log(room)
-    }
+    
 
     io.on("connection",(socket)=>{
 
@@ -55,7 +48,15 @@ nextApp.prepare().then(async ()=>{
             return joinedRoom
         }
         console.log("connected to server")
-
+        
+        const leaveRoom=(roomId:string,socketId:string)=>{
+            const room=rooms.get(roomId)
+            if(!room) return
+            const userMoves=room?.usersMoves.get(socketId)!
+            if(userMoves) room?.drawed.push(...userMoves)
+            room?.users.delete(socketId)
+            socket.leave(roomId)
+        }
         socket.on("create_room",(userName)=>{
             let roomId:string
             // generate random id
@@ -69,9 +70,18 @@ nextApp.prepare().then(async ()=>{
             io.to(socket.id).emit("created",roomId)
         })
 
+        socket.on("check_room",(roomId)=>{
+            if(rooms.has(roomId)){
+                socket.emit("room_exists",true)
+            }else{
+                socket.emit("room_exists",false)
+            }
+
+        })
+
         socket.on("join_room",(roomId,userName)=>{
             const room=rooms.get(roomId)
-            if(room){
+            if(room &&room.users.size<12){
                 socket.join(roomId)
                 room.users.set(socket.id,userName)
                 room.usersMoves.set(socket.id,[])
@@ -82,14 +92,6 @@ nextApp.prepare().then(async ()=>{
             }
         })
 
-        socket.on("check_room",(roomId)=>{
-            if(rooms.has(roomId)){
-                socket.emit("room_exists",true)
-            }else{
-                socket.emit("room_exists",false)
-            }
-
-        })
 
         socket.on("joined_room",()=>{
             const roomId=getRoomId()
@@ -97,7 +99,7 @@ nextApp.prepare().then(async ()=>{
 
             const room=rooms.get(roomId)
             if(!room) return
-            io.to(socket.id).emit("room",room,JSON.stringify([...room?.usersMoves]),JSON.stringify([...room?.users]))
+            io.to(socket.id).emit("room",room,JSON.stringify([...room.usersMoves]),JSON.stringify([...room?.users]))
             socket.broadcast.to(roomId).emit("new_user",socket.id,room.users.get(socket.id)||"Anonymous")
         })
         
@@ -111,6 +113,7 @@ nextApp.prepare().then(async ()=>{
             const roomId=getRoomId()
             console.log(roomId,"drawing")
             const timestamps=Date.now()
+            move.id =uuid()
             const newMove={...move,timestamps}
             addMove(roomId,socket.id,newMove)
             io.to(socket.id).emit("your_move",newMove)
