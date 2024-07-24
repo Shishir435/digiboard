@@ -4,7 +4,7 @@ import "../styles/globals.css";
 import RecoidContextProvider from "@/modules/room/context/recoil.contextProvider";
 export const metadata: Metadata = {
   title: "digiboard",
-  description: "Welcome to Next.js",
+  description: "Next.js whiteboard application",
 };
 export default function RootLayout({
   children,
