@@ -1,8 +1,15 @@
 "use client";
-import React from "react";
-import Room from "../../modules/room/components/Room";
+import ContextMenu from "@/modules/room/components/ContextMenu";
+import Room from "@/modules/room/components/Room";
+import { useRef } from "react";
 const DynamicRoom = () => {
-  return <Room />;
+  const ref = useRef<HTMLDivElement>(null);
+  return (
+    <div ref={ref} className="relative">
+      <ContextMenu />
+      <Room />
+    </div>
+  );
 };
 
 export default DynamicRoom;

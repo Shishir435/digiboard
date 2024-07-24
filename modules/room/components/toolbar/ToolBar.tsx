@@ -17,6 +17,7 @@ import LineWidthPicker from "./LineWidthPicker";
 import ModePicker from "./ModePicker";
 import ShapeSelector from "./ShapeSelector";
 import ShareButton from "./ShareButton";
+import SettingsButton from "./SettingsButton";
 
 const ToolBar = () => {
   const { width } = useViewPortSize();
@@ -26,7 +27,6 @@ const ToolBar = () => {
     if (width >= 1024) setOpened(true);
     else setOpened(false);
   }, [width]);
-
 
   return (
     <>
@@ -65,9 +65,10 @@ const ToolBar = () => {
         <div className="h-px w-full bg-white" />
 
         <BackgroundPicker />
-        <ShareButton/>
-        <DownloadButton/>
-        <ExitButton/>
+        <ShareButton />
+        <DownloadButton />
+        <ExitButton />
+        <SettingsButton />
       </motion.div>
     </>
   );
