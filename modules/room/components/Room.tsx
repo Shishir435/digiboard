@@ -11,10 +11,11 @@ import Chat from "./chat/Chat";
 import NameInput from "./NameInput";
 import ToolBar from "./toolbar/ToolBar";
 import UserList from "./UserList";
+import { useSettingsValue } from "@/common/recoil/settings";
 
 const Room = () => {
   const room = useRoom();
-
+  const { showChat, showMousePosition } = useSettingsValue();
   if (!room.id) return <NameInput />;
 
   return (
@@ -25,9 +26,9 @@ const Room = () => {
         <SelectionBtns />
         <MoveImage />
         <Canvas />
-        <MousePosition />
+        {showMousePosition && <MousePosition />}
         <MouseRenderer />
-        <Chat />
+        {showChat && <Chat />}
       </div>
     </RoomContextProvider>
   );

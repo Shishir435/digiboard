@@ -8,6 +8,10 @@ import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 
 import { socket } from "@/common/lib/socket";
 
+import { useViewPortSize } from "@/common/hooks/useViewPortSize";
+import { useContextMenuValue } from "@/common/recoil/contextMenu";
+import { useModalValue } from "@/common/recoil/modals";
+import { useSettingsValue } from "@/common/recoil/settings";
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useCtx } from "../../hooks/useCtx";
 import { useDraw } from "../../hooks/useDraw";
@@ -16,8 +20,6 @@ import { useRefs } from "../../hooks/useRefs";
 import { useSocketDraw } from "../../hooks/useSocketDraw";
 import Background from "./Background";
 import MiniMap from "./Minimap";
-import { useViewPortSize } from "@/common/hooks/useViewPortSize";
-import { useContextMenuValue } from "@/common/recoil/contextMenu";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
@@ -25,7 +27,8 @@ const Canvas = () => {
   const { x, y } = useBoardPosition();
   const ctx = useCtx();
   const { opened } = useContextMenuValue();
-
+  const { opened: modalOpen } = useModalValue();
+  const { showMiniMap } = useSettingsValue();
   const [dragging, setDragging] = useState(true);
 
   const {
@@ -91,11 +94,12 @@ const Canvas = () => {
         dragTransition={{ power: 0, timeConstant: 0 }}
         // HANDLERS
         onMouseDown={(e) => {
-          if (!opened) handleStartDrawing(e.clientX, e.clientY);
+          if (!opened && !modalOpen) handleStartDrawing(e.clientX, e.clientY);
         }}
         onMouseUp={handleEndDrawing}
         onMouseMove={(e) => {
-          if (!opened) handleDraw(e.clientX, e.clientY, e.shiftKey);
+          if (!opened && !modalOpen)
+            handleDraw(e.clientX, e.clientY, e.shiftKey);
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
@@ -110,7 +114,7 @@ const Canvas = () => {
       />
       <Background bgRef={bgRef} />
 
-      <MiniMap dragging={dragging} />
+      {showMiniMap && <MiniMap dragging={dragging} />}
       <button
         className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
           dragging ? "bg-green-500" : "bg-zinc-300 text-black"
