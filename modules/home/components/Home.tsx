@@ -104,9 +104,9 @@ const Home = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value.slice(0, 15))}
               />
-              <div className="flex flex-col items-center gap-2">
-                <Button type="submit">Create</Button>
-              </div>
+              <Button type="submit" className="w-full">
+                Create
+              </Button>
             </form>
           </TabsContent>
           <TabsContent value="join">
@@ -134,7 +134,9 @@ const Home = () => {
                 value={roomId}
                 onChange={(e) => setRoomId(e.target.value)}
               />
-              <Button type="submit">Join</Button>
+              <Button type="submit" className="w-full">
+                Join
+              </Button>
             </form>
           </TabsContent>
         </Tabs>
