@@ -17,12 +17,14 @@ import { useSocketDraw } from "../../hooks/useSocketDraw";
 import Background from "./Background";
 import MiniMap from "./Minimap";
 import { useViewPortSize } from "@/common/hooks/useViewPortSize";
+import { useContextMenuValue } from "@/common/recoil/contextMenu";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
   const { width, height } = useViewPortSize();
   const { x, y } = useBoardPosition();
   const ctx = useCtx();
+  const { opened } = useContextMenuValue();
 
   const [dragging, setDragging] = useState(true);
 
@@ -88,10 +90,12 @@ const Canvas = () => {
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
         // HANDLERS
-        onMouseDown={(e) => handleStartDrawing(e.clientX, e.clientY)}
+        onMouseDown={(e) => {
+          if (!opened) handleStartDrawing(e.clientX, e.clientY);
+        }}
         onMouseUp={handleEndDrawing}
         onMouseMove={(e) => {
-          handleDraw(e.clientX, e.clientY, e.shiftKey);
+          if (!opened) handleDraw(e.clientX, e.clientY, e.shiftKey);
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
