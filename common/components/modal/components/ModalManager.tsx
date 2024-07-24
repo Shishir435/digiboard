@@ -29,7 +29,7 @@ const ModalManager = () => {
     } else {
       portalNode.style.pointerEvents = "none";
     }
-  }, [portalNode, opened]);
+  }, [portalNode, opened, setContextMenu]);
   return (
     <Portal>
       <motion.div
