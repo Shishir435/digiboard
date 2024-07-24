@@ -1,4 +1,4 @@
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { modalAtom } from "./modals.atom";
 
@@ -13,4 +13,9 @@ const useModal = () => {
   return { openModal, closeModal };
 };
 
-export { useModal };
+const useModalValue = () => {
+  const useModalVal = useRecoilValue(modalAtom);
+  return useModalVal;
+};
+
+export { useModal, useModalValue };
