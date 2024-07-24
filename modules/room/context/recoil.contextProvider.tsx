@@ -1,7 +1,7 @@
 "use client";
 import ModalManager from "@/common/components/modal/components/ModalManager";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/ReactToastify.min.css'
+import "react-toastify/ReactToastify.min.css";
 import { RecoilRoot } from "recoil";
 
 export default function RecoidContextProvider({

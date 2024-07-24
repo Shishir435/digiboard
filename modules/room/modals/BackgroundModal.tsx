@@ -1,14 +1,12 @@
-"use client"
+"use client";
 import { AiOutlineClose } from "react-icons/ai";
 import { useBackground, useSetBackground } from "@/common/recoil/background";
 import { useModal } from "@/common/recoil/modals";
 
-
-
 const BackgroundModal = () => {
   const { closeModal } = useModal();
   const setBackground = useSetBackground();
-  const bg=useBackground()
+  const bg = useBackground();
   const renderBg = (
     ref: HTMLCanvasElement | null,
     mode: "dark" | "light",

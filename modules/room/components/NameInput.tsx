@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { FormEvent, useEffect, useState } from "react";
 
-import { useRouter,usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { socket } from "@/common/lib/socket";
 import { useModal } from "@/common/recoil/modals";
 import { useSetRoomId } from "@/common/recoil/rooms";
@@ -14,7 +14,7 @@ const NameInput = () => {
   const [name, setName] = useState("");
 
   const router = useRouter();
-  const pathname=usePathname();
+  const pathname = usePathname();
   const roomId = (pathname.substring(1) || "").toString();
 
   useEffect(() => {

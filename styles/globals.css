@@ -3,39 +3,39 @@
 @tailwind utilities;
 
 @layer components {
-    .btn-icon {
-      @apply flex h-7 w-7 items-center justify-center rounded-md text-xl text-white transition-all hover:scale-125 active:scale-100 disabled:opacity-25;
-    }
-  
-    .btn {
-      @apply rounded-xl bg-black p-5 py-1 text-white transition-all hover:scale-105 active:scale-100;
-    }
-  
-    .input {
-      @apply rounded-xl border p-5 py-1;
-    }
-  
-    .overflow-overlay {
-      overflow-y: scroll;
-      overflow-y: overlay;
-    }
+  .btn-icon {
+    @apply flex h-7 w-7 items-center justify-center rounded-md text-xl text-white transition-all hover:scale-125 active:scale-100 disabled:opacity-25;
   }
+
+  .btn {
+    @apply rounded-xl bg-black p-5 py-1 text-white transition-all hover:scale-105 active:scale-100;
+  }
+
+  .input {
+    @apply rounded-xl border p-5 py-1;
+  }
+
+  .overflow-overlay {
+    overflow-y: scroll;
+    overflow-y: overlay;
+  }
+}
 
 #__next,
 #portal {
-    z-index: 0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    overflow-y: overlay;
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-y: overlay;
 }
 
 #portal {
-    z-index: 1;
+  z-index: 1;
 }
 
 body {

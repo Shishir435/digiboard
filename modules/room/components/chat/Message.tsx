@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { socket } from "@/common/lib/socket";
 
 const Message = ({ userId, msg, username, color }: Message) => {

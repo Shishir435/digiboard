@@ -1,10 +1,9 @@
-"use client"
+"use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { motion, useMotionValue } from "framer-motion";
 
 import { CANVAS_SIZE } from "@/common/constants/canvasSize";
-
 
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useRefs } from "../../hooks/useRefs";
@@ -22,7 +21,7 @@ const MiniMap = ({ dragging }: { dragging: boolean }) => {
 
   useEffect(() => {
     if (!draggingMinimap) {
-      const unsubscribe = boardPos.x.on("change",setX);
+      const unsubscribe = boardPos.x.on("change", setX);
       return unsubscribe;
     }
 
@@ -31,7 +30,7 @@ const MiniMap = ({ dragging }: { dragging: boolean }) => {
 
   useEffect(() => {
     if (!draggingMinimap) {
-      const unsubscribe = boardPos.y.on("change",setY);
+      const unsubscribe = boardPos.y.on("change", setY);
       return unsubscribe;
     }
 
@@ -51,10 +50,10 @@ const MiniMap = ({ dragging }: { dragging: boolean }) => {
   }, [width]);
 
   useEffect(() => {
-    miniX.on("change",(newX) => {
+    miniX.on("change", (newX) => {
       if (!dragging) boardPos.x.set(Math.floor(-newX * divider));
     });
-    miniY.on("change",(newY) => {
+    miniY.on("change", (newY) => {
       if (!dragging) boardPos.y.set(Math.floor(-newY * divider));
     });
 

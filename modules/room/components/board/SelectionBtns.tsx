@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsArrowsMove } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
