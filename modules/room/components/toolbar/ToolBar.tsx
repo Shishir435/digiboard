@@ -2,65 +2,31 @@
 import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { FiChevronRight } from "react-icons/fi";
-import { HiOutlineDownload } from "react-icons/hi";
-import { ImExit } from "react-icons/im";
-import { IoIosShareAlt } from "react-icons/io";
 
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 import { DEFAULT_EASE } from "@/common/constants/easings";
-
-import { useModal } from "@/common/recoil/modals";
-
-import { useRefs } from "../../hooks/useRefs";
-import ShareModal from "../../modals/ShareModal";
-
 import ColorPicker from "./ColorPicker";
 
+import { useViewPortSize } from "@/common/hooks/useViewPortSize";
+import BackgroundPicker from "./BackgroundPicker";
+import DownloadButton from "./DownloadButton";
+import ExitButton from "./ExitButton";
+import HistoryBtns from "./HistrotyBtns";
 import ImagePicker from "./ImagePicker";
 import LineWidthPicker from "./LineWidthPicker";
 import ModePicker from "./ModePicker";
 import ShapeSelector from "./ShapeSelector";
-import { useViewPortSize } from "@/common/hooks/useViewPortSize";
-import HistoryBtns from "./HistrotyBtns";
-import BackgroundPicker from "./BackgroundPicker";
+import ShareButton from "./ShareButton";
 
 const ToolBar = () => {
-  const { canvasRef, bgRef } = useRefs();
-  const { openModal } = useModal();
   const { width } = useViewPortSize();
-
   const [opened, setOpened] = useState(false);
-
-  const router = useRouter();
 
   useEffect(() => {
     if (width >= 1024) setOpened(true);
     else setOpened(false);
   }, [width]);
 
-  const handleExit = () => router.push("/");
-
-  const handleDownload = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = CANVAS_SIZE.width;
-    canvas.height = CANVAS_SIZE.height;
-
-    const tempCtx = canvas.getContext("2d");
-
-    if (tempCtx && canvasRef.current && bgRef.current) {
-      tempCtx.drawImage(bgRef.current, 0, 0);
-      tempCtx.drawImage(canvasRef.current, 0, 0);
-    }
-
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "canvas.png";
-    link.click();
-  };
-
-  const handleShare = () => openModal(<ShareModal />);
 
   return (
     <>
@@ -99,15 +65,9 @@ const ToolBar = () => {
         <div className="h-px w-full bg-white" />
 
         <BackgroundPicker />
-        <button className="btn-icon text-2xl" onClick={handleShare}>
-          <IoIosShareAlt />
-        </button>
-        <button className="btn-icon text-2xl" onClick={handleDownload}>
-          <HiOutlineDownload />
-        </button>
-        <button className="btn-icon text-xl" onClick={handleExit}>
-          <ImExit />
-        </button>
+        <ShareButton/>
+        <DownloadButton/>
+        <ExitButton/>
       </motion.div>
     </>
   );
