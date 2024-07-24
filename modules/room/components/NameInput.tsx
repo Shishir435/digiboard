@@ -14,7 +14,7 @@ const NameInput = () => {
   const [name, setName] = useState("");
 
   const router = useRouter();
-  const roomId = (router.query.roomId || "").toString();
+  const roomId = (router.query.roomid || "").toString();
 
   useEffect(() => {
     if (!roomId) return;
