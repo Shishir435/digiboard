@@ -2,9 +2,11 @@ import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 import React from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useRefs } from "../../hooks/useRefs";
+import { usePathname } from "next/navigation";
 
 const DownloadButton = () => {
   const { canvasRef, bgRef } = useRefs();
+  const pathname = usePathname();
   const handleDownload = () => {
     const canvas = document.createElement("canvas");
     canvas.width = CANVAS_SIZE.width;
@@ -19,7 +21,7 @@ const DownloadButton = () => {
 
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
-    link.download = "canvas.png";
+    link.download = `${pathname.substring(1) || "canvas"}.png`;
     link.click();
   };
   return (
