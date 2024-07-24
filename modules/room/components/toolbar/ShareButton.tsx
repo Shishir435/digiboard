@@ -7,8 +7,8 @@ const ShareButton = () => {
   const { openModal } = useModal();
   const handleShare = () => openModal(<ShareModal />);
   return (
-    <button className="text-2xl" onClick={handleShare}>
-      <IoIosShareAlt />
+    <button onClick={handleShare}>
+      <IoIosShareAlt className="size-6" />
     </button>
   );
 };

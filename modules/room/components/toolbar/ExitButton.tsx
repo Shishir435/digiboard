@@ -6,8 +6,8 @@ const ExitButton = () => {
   const router = useRouter();
   const handleExit = () => router.push("/");
   return (
-    <button className="btn-icon text-xl" onClick={handleExit}>
-      <ImExit />
+    <button onClick={handleExit}>
+      <ImExit className="size-6" />
     </button>
   );
 };

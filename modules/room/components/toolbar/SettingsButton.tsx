@@ -5,11 +5,8 @@ import SettingsModal from "../../modals/SettingsModal";
 const SettingsButton = () => {
   const { openModal } = useModal();
   return (
-    <button
-      className="btn-icon text-xl"
-      onClick={() => openModal(<SettingsModal />)}
-    >
-      <BsGearFill />
+    <button onClick={() => openModal(<SettingsModal />)}>
+      <BsGearFill className="size-6" />
     </button>
   );
 };
