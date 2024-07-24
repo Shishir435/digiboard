@@ -1,3 +1,4 @@
+"use client"
 import { AiOutlineClose } from "react-icons/ai";
 import { useBackground, useSetBackground } from "@/common/recoil/background";
 import { useModal } from "@/common/recoil/modals";

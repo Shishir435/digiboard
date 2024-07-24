@@ -1,3 +1,4 @@
+"use cleint"
 import { FormEvent, useState } from "react";
 
 import { AiOutlineSend } from "react-icons/ai";

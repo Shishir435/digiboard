@@ -1,3 +1,4 @@
+"use client"
 import { useOptions } from '@/common/recoil/options'
 import React from 'react'
 import {FaEraser} from 'react-icons/fa'

@@ -1,7 +1,8 @@
+"use client"
 import {
   createContext,
   Dispatch,
-  ReactChild,
+  ReactNode,
   RefObject,
   SetStateAction,
   useEffect,
@@ -36,7 +37,7 @@ export const roomContext = createContext<{
   >;
 }>(null!);
 
-const RoomContextProvider = ({ children }: { children: ReactChild }) => {
+const RoomContextProvider = ({ children }: { children: ReactNode }) => {
   const setRoom = useSetRoom();
   const { users } = useRoom();
   const { handleAddUser, handleRemoveUser } = useSetUsers();

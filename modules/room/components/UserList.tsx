@@ -1,3 +1,4 @@
+"use client"
 import { useRoom } from "@/common/recoil/rooms";
 
 const UserList = () => {

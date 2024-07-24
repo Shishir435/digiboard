@@ -1,3 +1,4 @@
+"use client"
 import { FaRedo, FaUndo } from "react-icons/fa";
 import { useRefs } from "../../hooks/useRefs";
 import { useMyMoves } from "@/common/recoil/rooms";
