@@ -1,3 +1,4 @@
+"use client";
 import { socket } from "@/common/lib/socket";
 import { useRoom } from "@/common/recoil/rooms";
 

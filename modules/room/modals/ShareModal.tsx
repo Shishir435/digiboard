@@ -1,3 +1,4 @@
+"use client";
 import { useModal } from "@/common/recoil/modals";
 import { useRoom } from "@/common/recoil/rooms";
 import { useEffect, useState } from "react";

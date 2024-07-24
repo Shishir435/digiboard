@@ -1,6 +1,7 @@
+"use client";
 import { FormEvent, useEffect, useState } from "react";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { socket } from "@/common/lib/socket";
 import { useModal } from "@/common/recoil/modals";

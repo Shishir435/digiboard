@@ -1,3 +1,4 @@
+"use client";
 import { useRoom } from "@/common/recoil/rooms";
 
 import RoomContextProvider from "../context/room.context";
@@ -18,7 +19,7 @@ const Room = () => {
 
   return (
     <RoomContextProvider>
-      <div className="relative h-full w-full overflow-hidden">
+      <div className="relative h-screen w-full overflow-hidden">
         <UserList />
         <ToolBar />
         <SelectionBtns />
