@@ -35,7 +35,9 @@ const Room = () => {
           <SettingsButton />
           <ThemeButton />
         </div>
-        <UserList />
+        <div className="absolute z-[60] bottom-20 left-1/2">
+          <UserList />
+        </div>
         <ToolBar />
         <SelectionBtns />
         <MoveImage />
