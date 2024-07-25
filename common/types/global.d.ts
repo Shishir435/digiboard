@@ -1,6 +1,14 @@
 import { RgbaColor } from "react-colorful";
 
 export declare global {
+  type CanvasBackgroundType = {
+    "bg-1": string;
+    "bg-2": string;
+    "bg-3": string;
+    "bg-4": string;
+    "bg-5": string;
+  };
+
   type Shape = "line" | "circle" | "rect" | "image";
   type CtxMode = "eraser" | "draw" | "select";
 
