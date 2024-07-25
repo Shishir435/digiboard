@@ -11,9 +11,9 @@ export const CANVAS_BACKGROUND_LIGHT: CanvasBackgroundType = {
   "bg-5": "#fdf8f6",
 };
 export const CANVAS_BACKGROUND_DARK: CanvasBackgroundType = {
-  "bg-1": "#121212",
+  "bg-1": "#181605",
   "bg-2": "#161718",
   "bg-3": "#13171C",
-  "bg-4": "#181605",
+  "bg-4": "#121212",
   "bg-5": "#1B1615",
 };

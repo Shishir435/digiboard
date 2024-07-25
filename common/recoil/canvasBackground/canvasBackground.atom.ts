@@ -7,6 +7,6 @@ export const canvasBackgroundAtom = atom<{
   key: "canvasBackground",
   default: {
     mode: "light",
-    canvasBg: "bg-1",
+    canvasBg: "bg-4",
   },
 });
