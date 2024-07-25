@@ -9,6 +9,7 @@ import {
 import { Input } from "@/common/components/ui/input";
 import { useModal } from "@/common/recoil/modals";
 import { useRoom } from "@/common/recoil/rooms";
+import { ClipboardCopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaRegCopy } from "react-icons/fa";
@@ -31,9 +32,9 @@ const ShareModal = () => {
   };
 
   return (
-    <Card className="relative flex flex-col items-center rounded-md bg-white p-10 pt-5">
+    <Card className="relative flex flex-col bg-toolbar text-toolbar-foreground items-center rounded-md p-10 pt-5">
       <button onClick={closeModal} className="absolute top-5 right-5">
-        <AiOutlineClose />
+        <Cross1Icon />
       </button>
       <CardTitle className="text-2xl font-bold">Invite</CardTitle>
       <CardHeader>
@@ -46,7 +47,7 @@ const ShareModal = () => {
           className="absolute top-0 right-4"
           onClick={handleCopy}
         >
-          <FaRegCopy />
+          <ClipboardCopyIcon />
         </Button>
       </CardContent>
     </Card>

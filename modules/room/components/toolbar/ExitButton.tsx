@@ -1,14 +1,14 @@
+import { Button } from "@/common/components/ui/button";
+import { ExitIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { ImExit } from "react-icons/im";
 
 const ExitButton = () => {
   const router = useRouter();
   const handleExit = () => router.push("/");
   return (
-    <button onClick={handleExit}>
-      <ImExit className="size-6" />
-    </button>
+    <Button size="icon" variant="ghost" onClick={handleExit}>
+      <ExitIcon />
+    </Button>
   );
 };
 

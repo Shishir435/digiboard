@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 
 import { getStringFromRgba } from "@/common/lib/rgba";
 import { socket } from "@/common/lib/socket";
-import { useBackground } from "@/common/recoil/background";
+import { useBackground } from "@/common/recoil/canvasBackground";
 import { useSetSelection } from "@/common/recoil/options";
 import { useMyMoves, useRoom } from "@/common/recoil/rooms";
 import { useSetSavedMoves } from "@/common/recoil/savedMoves";

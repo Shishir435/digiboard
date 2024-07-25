@@ -9,6 +9,8 @@ import { useClickAway } from "react-use";
 import { useOptions } from "@/common/recoil/options/options.hook";
 
 import { EntryAnimation } from "../../animations/colorPicker.animations";
+import { Button } from "@/common/components/ui/button";
+import { ColorWheelIcon } from "@radix-ui/react-icons";
 
 const ColorPicker = () => {
   const [options, setOptions] = useOptions();
@@ -21,17 +23,18 @@ const ColorPicker = () => {
 
   return (
     <div className="relative flex items-center" ref={ref}>
-      <button
-        className="btn-icon"
+      <Button
+        size="icon"
+        variant="ghost"
         onClick={() => setOpened(!opened)}
         disabled={options.mode === "select"}
       >
-        <BsPaletteFill />
-      </button>
+        <ColorWheelIcon />
+      </Button>
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute left-10 mt-24 sm:left-14"
+            className="absolute top-10 mt-24 sm:top-14"
             variants={EntryAnimation}
             initial="from"
             animate="to"

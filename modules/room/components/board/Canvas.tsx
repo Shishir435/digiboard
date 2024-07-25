@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BsArrowsMove } from "react-icons/bs";
 
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { CANVAS_SIZE } from "@/common/constants/canvas";
 
 import { socket } from "@/common/lib/socket";
 
@@ -21,6 +21,8 @@ import { useSocketDraw } from "../../hooks/useSocketDraw";
 import Background from "./Background";
 import MiniMap from "./Minimap";
 import TooltipContainer from "@/common/components/ui/tooltip";
+import { MoveIcon } from "@radix-ui/react-icons";
+import { Button } from "@/common/components/ui/button";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
@@ -116,18 +118,23 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
 
       {showMiniMap && <MiniMap dragging={dragging} />}
-
-      <button
-        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
-          dragging ? "bg-green-500" : "bg-zinc-300 text-black"
-        } px-3 py-2 text-lg text-white`}
-        onClick={() => setDragging((prev) => !prev)}
-      >
+      <div className="absolute bottom-5 right-5 z-10 ">
         <TooltipContainer
-          trigger={<BsArrowsMove className="translate-y-1" />}
-          hoverText="Click to drag"
+          trigger={
+            <Button
+              size="icon"
+              variant="ghost"
+              className={`rounded-xl md:bottom-5 ${
+                dragging ? "bg-green-500" : "bg-toolbar text-black"
+              } px-3 py-2 text-lg text-toolbar-foreground`}
+              onClick={() => setDragging((prev) => !prev)}
+            >
+              <MoveIcon className="" />
+            </Button>
+          }
+          hoverText="Move"
         />
-      </button>
+      </div>
     </div>
   );
 };

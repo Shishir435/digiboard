@@ -1,8 +1,8 @@
+import { Button } from "@/common/components/ui/button";
 import { CANVAS_SIZE } from "@/common/constants/canvas";
-import React from "react";
-import { HiOutlineDownload } from "react-icons/hi";
-import { useRefs } from "../../hooks/useRefs";
+import { DownloadIcon } from "@radix-ui/react-icons";
 import { usePathname } from "next/navigation";
+import { useRefs } from "../../hooks/useRefs";
 
 const DownloadButton = () => {
   const { canvasRef, bgRef } = useRefs();
@@ -25,9 +25,9 @@ const DownloadButton = () => {
     link.click();
   };
   return (
-    <button className="text-2xl" onClick={handleDownload}>
-      <HiOutlineDownload />
-    </button>
+    <Button size="icon" variant="ghost" onClick={handleDownload}>
+      <DownloadIcon />
+    </Button>
   );
 };
 

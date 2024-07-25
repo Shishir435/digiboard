@@ -1,14 +1,13 @@
 "use client";
 import { useRef, useState } from "react";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { BiRectangle } from "react-icons/bi";
-import { BsCircle } from "react-icons/bs";
-import { CgShapeZigzag } from "react-icons/cg";
+import { AnimatePresence, motion } from "framer-motion";
 import { useClickAway } from "react-use";
 
 import { useOptions } from "@/common/recoil/options";
 
+import { Button } from "@/common/components/ui/button";
+import { BorderSolidIcon, CircleIcon, SquareIcon } from "@radix-ui/react-icons";
 import { EntryAnimation } from "../../animations/colorPicker.animations";
 
 const ShapeSelector = () => {
@@ -31,45 +30,50 @@ const ShapeSelector = () => {
 
   return (
     <div className="relative flex items-center" ref={ref}>
-      <button
-        className="btn-icon text-2xl"
+      <Button
+        size="icon"
+        variant="ghost"
         disabled={options.mode === "select"}
         onClick={() => setOpened((prev) => !prev)}
       >
-        {options.shape === "circle" && <BsCircle />}
-        {options.shape === "rect" && <BiRectangle />}
-        {options.shape === "line" && <CgShapeZigzag />}
-      </button>
+        {options.shape === "circle" && <CircleIcon />}
+        {options.shape === "rect" && <SquareIcon />}
+        {options.shape === "line" && <BorderSolidIcon />}
+      </Button>
 
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute left-14 z-10 flex gap-1 rounded-lg border bg-zinc-900 p-2 md:border-0"
+            className="absolute top-16 -left-10 z-10 flex gap-1 rounded-lg border bg-toolbar text-toolbar-foreground p-2 md:border-0"
             variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"
           >
-            <button
+            <Button
               className="btn-icon text-2xl"
               onClick={() => handleShapeChange("line")}
             >
-              <CgShapeZigzag />
-            </button>
+              <BorderSolidIcon />
+            </Button>
 
-            <button
+            <Button
+              size="icon"
+              variant="ghost"
               className="btn-icon text-2xl"
               onClick={() => handleShapeChange("rect")}
             >
-              <BiRectangle />
-            </button>
+              <SquareIcon />
+            </Button>
 
-            <button
+            <Button
+              size="icon"
+              variant="ghost"
               className="btn-icon text-2xl"
               onClick={() => handleShapeChange("circle")}
             >
-              <BsCircle />
-            </button>
+              <CircleIcon />
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>

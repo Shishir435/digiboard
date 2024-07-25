@@ -1,15 +1,15 @@
+import { Button } from "@/common/components/ui/button";
 import { useModal } from "@/common/recoil/modals";
-import React from "react";
+import { Share1Icon } from "@radix-ui/react-icons";
 import ShareModal from "../../modals/ShareModal";
-import { IoIosShareAlt } from "react-icons/io";
 
 const ShareButton = () => {
   const { openModal } = useModal();
   const handleShare = () => openModal(<ShareModal />);
   return (
-    <button onClick={handleShare}>
-      <IoIosShareAlt className="size-6" />
-    </button>
+    <Button size="icon" variant="ghost" onClick={handleShare}>
+      <Share1Icon />
+    </Button>
   );
 };
 
