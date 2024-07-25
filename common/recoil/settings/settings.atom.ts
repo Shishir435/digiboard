@@ -4,11 +4,13 @@ export const settingsAtom = atom<{
   showMiniMap: boolean;
   showChat: boolean;
   showMousePosition: boolean;
+  showLines: boolean;
 }>({
   key: "settings",
   default: {
-    showChat: true,
+    showChat: false,
     showMiniMap: false,
     showMousePosition: false,
+    showLines: false,
   },
 });

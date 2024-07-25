@@ -5,7 +5,8 @@ import { useSetSettings, useSettingsValue } from "@/common/recoil/settings";
 import React from "react";
 
 const Settings = () => {
-  const { showChat, showMiniMap, showMousePosition } = useSettingsValue();
+  const { showChat, showMiniMap, showMousePosition, showLines } =
+    useSettingsValue();
   const setSettings = useSetSettings();
 
   return (
@@ -38,6 +39,18 @@ const Settings = () => {
               setSettings((prev) => ({
                 ...prev,
                 showMousePosition: !showMousePosition,
+              }))
+            }
+          />
+        </div>
+        <div className="flex gap-4 justify-between">
+          <p>Show Lines</p>
+          <Switch
+            checked={showLines}
+            onCheckedChange={() =>
+              setSettings((prev) => ({
+                ...prev,
+                showLines: !showLines,
               }))
             }
           />
