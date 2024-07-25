@@ -1,8 +1,6 @@
 "use client";
 
 import ColorPicker from "./ColorPicker";
-
-import BackgroundPicker from "./BackgroundPicker";
 import DownloadButton from "./DownloadButton";
 import ExitButton from "./ExitButton";
 import ImagePicker from "./ImagePicker";
@@ -23,7 +21,6 @@ const ToolBar = () => {
       <ModePicker />
       <ImagePicker />
       <div className="w-px h-5 bg-gray-500" />
-      <BackgroundPicker />
       <ShareButton />
       <DownloadButton />
       <ExitButton />

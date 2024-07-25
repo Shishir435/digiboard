@@ -9,7 +9,6 @@ import ShareButton from "@/modules/room/components/toolbar/ShareButton";
 import { useEffect, useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import DownloadButton from "./toolbar/DownloadButton";
-import BackgroundPicker from "./toolbar/BackgroundPicker";
 
 const ContextMenu = () => {
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -50,7 +49,6 @@ const ContextMenu = () => {
             <ExitButton />
             <SettingsButton />
             <DownloadButton />
-            <BackgroundPicker />
           </div>
         </div>
       </div>
