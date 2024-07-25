@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import { MotionValue, useMotionValue } from "framer-motion";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import { COLORS_ARRAY } from "@/common/constants/colos";
 import { socket } from "@/common/lib/socket";
@@ -87,19 +87,15 @@ const RoomContextProvider = ({ children }: { children: ReactNode }) => {
     });
 
     socket.on("new_user", (userId, username) => {
-      toast(`${username} has joined the room.`, {
-        position: "top-center",
-        theme: "colored",
-      });
+      toast.success(`${username} has joined the room.`);
 
       handleAddUser(userId, username);
     });
 
     socket.on("user_disconnected", (userId) => {
-      toast(`${users.get(userId)?.name || "Anonymous"} has left the room.`, {
-        position: "top-center",
-        theme: "colored",
-      });
+      toast.success(
+        `${users.get(userId)?.name || "Anonymous"} has left the room.`
+      );
 
       handleRemoveUser(userId);
     });

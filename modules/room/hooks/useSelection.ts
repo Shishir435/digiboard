@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 import { socket } from "@/common/lib/socket";
@@ -187,10 +187,10 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
           }),
         ])
         .then(() => {
-          toast("Copied to clipboard!", {
-            position: "top-center",
-            theme: "colored",
-          });
+          toast.success("Copied to clipboard!");
+        })
+        .catch(() => {
+          toast.error("Someting went wrong");
         });
   };
 

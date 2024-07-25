@@ -11,9 +11,7 @@ import { useModal } from "@/common/recoil/modals";
 import { useRoom } from "@/common/recoil/rooms";
 import { ClipboardCopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import { FaRegCopy } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const ShareModal = () => {
   const { id } = useRoom();
@@ -24,10 +22,7 @@ const ShareModal = () => {
   useEffect(() => setUrl(window.location.href), []);
 
   const handleCopy = () => {
-    toast("Copied to clipboard", {
-      position: "top-center",
-      theme: "colored",
-    });
+    toast("Copied to clipboard");
     navigator.clipboard.writeText(url);
   };
 
