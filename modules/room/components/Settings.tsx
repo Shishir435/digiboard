@@ -1,14 +1,26 @@
 "use client";
+import { Button } from "@/common/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/common/components/ui/card";
 import { Switch } from "@/common/components/ui/switch";
+import {
+  CANVAS_BACKGROUND_DARK,
+  CANVAS_BACKGROUND_LIGHT,
+} from "@/common/constants/canvas";
+import {
+  useBackground,
+  useSetBackground,
+} from "@/common/recoil/canvasBackground";
 import { useSetSettings, useSettingsValue } from "@/common/recoil/settings";
-import React from "react";
 
 const Settings = () => {
   const { showChat, showMiniMap, showMousePosition, showLines } =
     useSettingsValue();
   const setSettings = useSetSettings();
-
+  const bg = useBackground();
+  const setBg = useSetBackground();
+  const handleClick = (val: keyof CanvasBackgroundType) => {
+    setBg((prev) => ({ ...prev, canvasBg: val }));
+  };
   return (
     <Card className="px-8 py-4">
       <CardTitle className="text-center">Digiboard Settings</CardTitle>
@@ -54,6 +66,45 @@ const Settings = () => {
               }))
             }
           />
+        </div>
+        <div className="flex gap-2 justify-between">
+          {bg.mode === "dark"
+            ? Object.keys(CANVAS_BACKGROUND_DARK).map((val) => (
+                <Button
+                  key={val}
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => handleClick(val as keyof CanvasBackgroundType)}
+                >
+                  <div
+                    className="h-9 w-9"
+                    style={{
+                      backgroundColor:
+                        CANVAS_BACKGROUND_DARK[
+                          val as keyof CanvasBackgroundType
+                        ],
+                    }}
+                  />
+                </Button>
+              ))
+            : Object.keys(CANVAS_BACKGROUND_LIGHT).map((val) => (
+                <Button
+                  key={val}
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => handleClick(val as keyof CanvasBackgroundType)}
+                >
+                  <div
+                    className="h-9 w-9"
+                    style={{
+                      backgroundColor:
+                        CANVAS_BACKGROUND_LIGHT[
+                          val as keyof CanvasBackgroundType
+                        ],
+                    }}
+                  />
+                </Button>
+              ))}
         </div>
       </CardContent>
     </Card>

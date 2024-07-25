@@ -20,21 +20,18 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
 
   useEffect(() => {
     const ctx = bgRef.current?.getContext("2d");
-
+    const backgroundColor =
+      bg.mode === "dark"
+        ? CANVAS_BACKGROUND_DARK[bg.canvasBg]
+        : CANVAS_BACKGROUND_LIGHT[bg.canvasBg];
     if (ctx) {
-      ctx.fillStyle = bg.mode === "dark" ? "#222" : "#fff";
+      // canvas backgroundColor
+      ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
-
-      if (bg.mode === "dark") {
-        document.body.style.backgroundColor =
-          CANVAS_BACKGROUND_DARK[bg.canvasBg];
-      } else if (bg.mode === "light") {
-        document.body.style.backgroundColor =
-          CANVAS_BACKGROUND_LIGHT[bg.canvasBg];
-      }
-
+      document.body.style.backgroundColor = backgroundColor;
       if (settings.showLines) {
         ctx.lineWidth = 1;
+        // line color
         ctx.strokeStyle = bg.mode === "dark" ? "#444" : "#ddd";
         for (let i = 0; i < CANVAS_SIZE.height; i += 25) {
           ctx.beginPath();
@@ -52,13 +49,12 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
       }
     }
   }, [bgRef, bg, settings.showLines]);
-
   return (
     <motion.canvas
       ref={bgRef}
       width={CANVAS_SIZE.width}
       height={CANVAS_SIZE.height}
-      className="absolute top-0 bg-zinc-100"
+      className="absolute top-0"
       style={{ x, y }}
     />
   );
