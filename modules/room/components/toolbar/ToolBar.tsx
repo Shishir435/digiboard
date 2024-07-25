@@ -13,7 +13,7 @@ const ToolBar = () => {
   return (
     <div
       style={{ translate: "-50%" }}
-      className="absolute top-5 left-1/2 z-[30] flex items-center gap-4 rounded-lg bg-toolbar px-4 py-2 text-toolbar-foreground shadow-lg"
+      className="absolute top-5 left-1/2 z-[30] flex items-center gap-4 rounded-lg bg-toolbar px-4 py-2 text-toolbar-foreground shadow-md"
     >
       <ShapeSelector />
       <ColorPicker />

@@ -43,7 +43,7 @@ const ContextMenu = () => {
         }}
         className="absolute z-[60] py-2 h-12"
       >
-        <div className="fexl justify-center items-center bg-white rounded-sm px-4 py-2 shadow-lg">
+        <div className="fexl justify-center items-center bg-toolbar text-toolbar-foreground rounded-sm px-4 py-2 shadow-md">
           <div className="flex items-center gap-2 justify-between w-full">
             <ShareButton />
             <ExitButton />
