@@ -1,7 +1,6 @@
 "use client";
 import ModalManager from "@/common/components/modal/components/ModalManager";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/ReactToastify.min.css";
+import { Toaster } from "@/common/components/ui/sonner";
 import { RecoilRoot } from "recoil";
 
 export default function RecoidContextProvider({
@@ -12,7 +11,7 @@ export default function RecoidContextProvider({
   return (
     <RecoilRoot>
       <div id="portal"></div>
-      <ToastContainer />
+      <Toaster richColors />
       <ModalManager />
       {children}
     </RecoilRoot>

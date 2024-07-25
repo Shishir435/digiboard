@@ -1,10 +1,9 @@
 "use client";
 import { useEffect } from "react";
 
-import { AiOutlineSelect } from "react-icons/ai";
-import { BsPencilFill } from "react-icons/bs";
-import { FaEraser } from "react-icons/fa";
+import { EraserIcon, Pencil1Icon, SectionIcon } from "@radix-ui/react-icons";
 
+import { Button } from "@/common/components/ui/button";
 import { useOptions, useSetSelection } from "@/common/recoil/options";
 
 const ModePicker = () => {
@@ -19,7 +18,9 @@ const ModePicker = () => {
 
   return (
     <>
-      <button
+      <Button
+        size="icon"
+        variant="ghost"
         className={`btn-icon text-xl ${
           options.mode === "draw" && "bg-green-400"
         }`}
@@ -29,11 +30,14 @@ const ModePicker = () => {
             mode: "draw",
           }));
         }}
+        title="Draw"
       >
-        <BsPencilFill />
-      </button>
+        <Pencil1Icon />
+      </Button>
 
-      <button
+      <Button
+        size="icon"
+        variant="ghost"
         className={`btn-icon text-xl ${
           options.mode === "eraser" && "bg-green-400"
         }`}
@@ -43,23 +47,25 @@ const ModePicker = () => {
             mode: "eraser",
           }));
         }}
+        title="Eraser"
       >
-        <FaEraser />
-      </button>
+        <EraserIcon />
+      </Button>
 
-      <button
-        className={`btn-icon text-2xl ${
-          options.mode === "select" && "bg-green-400"
-        }`}
+      <Button
+        size="icon"
+        variant="ghost"
+        className={`${options.mode === "select" && "bg-green-400"}`}
         onClick={() => {
           setOptions((prev) => ({
             ...prev,
             mode: "select",
           }));
         }}
+        title="Select"
       >
-        <AiOutlineSelect />
-      </button>
+        <SectionIcon />
+      </Button>
     </>
   );
 };

@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 
-import { BsFillImageFill } from "react-icons/bs";
-
 import { optimizeImage } from "@/common/lib/optimizeImage";
 
+import { Button } from "@/common/components/ui/button";
+import { ImageIcon } from "@radix-ui/react-icons";
 import { useMoveImage } from "../../hooks/useMoveImage";
 
 const ImagePicker = () => {
@@ -47,9 +47,14 @@ const ImagePicker = () => {
   };
 
   return (
-    <button className="btn-icon text-xl" onClick={handleImageInput}>
-      <BsFillImageFill />
-    </button>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={handleImageInput}
+      title="Insert Image"
+    >
+      <ImageIcon />
+    </Button>
   );
 };
 

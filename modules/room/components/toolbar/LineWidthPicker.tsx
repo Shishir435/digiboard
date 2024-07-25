@@ -8,6 +8,8 @@ import { useClickAway } from "react-use";
 import { useOptions } from "@/common/recoil/options";
 
 import { EntryAnimation } from "../../animations/colorPicker.animations";
+import { Button } from "@/common/components/ui/button";
+import { BorderWidthIcon } from "@radix-ui/react-icons";
 
 const LineWidthPicker = () => {
   const [options, setOptions] = useOptions();
@@ -20,17 +22,19 @@ const LineWidthPicker = () => {
 
   return (
     <div className="relative flex items-center" ref={ref}>
-      <button
-        className="btn-icon text-xl"
+      <Button
+        size="icon"
+        variant="ghost"
         onClick={() => setOpened(!opened)}
         disabled={options.mode === "select"}
+        title="LineWidth"
       >
-        <BsBorderWidth />
-      </button>
+        <BorderWidthIcon />
+      </Button>
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute top-[6px] left-14 w-36"
+            className="absolute top-16 -left-10 w-36"
             variants={EntryAnimation}
             initial="from"
             animate="to"

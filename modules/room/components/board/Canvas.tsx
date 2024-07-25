@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BsArrowsMove } from "react-icons/bs";
 
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { CANVAS_SIZE } from "@/common/constants/canvas";
 
 import { socket } from "@/common/lib/socket";
 
+import { useViewPortSize } from "@/common/hooks/useViewPortSize";
+import { useContextMenuValue } from "@/common/recoil/contextMenu";
+import { useModalValue } from "@/common/recoil/modals";
+import { useSettingsValue } from "@/common/recoil/settings";
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useCtx } from "../../hooks/useCtx";
 import { useDraw } from "../../hooks/useDraw";
@@ -16,14 +20,18 @@ import { useRefs } from "../../hooks/useRefs";
 import { useSocketDraw } from "../../hooks/useSocketDraw";
 import Background from "./Background";
 import MiniMap from "./Minimap";
-import { useViewPortSize } from "@/common/hooks/useViewPortSize";
+import TooltipContainer from "@/common/components/ui/tooltip";
+import { MoveIcon } from "@radix-ui/react-icons";
+import { Button } from "@/common/components/ui/button";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
   const { width, height } = useViewPortSize();
   const { x, y } = useBoardPosition();
   const ctx = useCtx();
-
+  const { opened } = useContextMenuValue();
+  const { opened: modalOpen } = useModalValue();
+  const { showMiniMap } = useSettingsValue();
   const [dragging, setDragging] = useState(true);
 
   const {
@@ -88,10 +96,13 @@ const Canvas = () => {
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
         // HANDLERS
-        onMouseDown={(e) => handleStartDrawing(e.clientX, e.clientY)}
+        onMouseDown={(e) => {
+          if (!opened && !modalOpen) handleStartDrawing(e.clientX, e.clientY);
+        }}
         onMouseUp={handleEndDrawing}
         onMouseMove={(e) => {
-          handleDraw(e.clientX, e.clientY, e.shiftKey);
+          if (!opened && !modalOpen)
+            handleDraw(e.clientX, e.clientY, e.shiftKey);
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
@@ -106,15 +117,24 @@ const Canvas = () => {
       />
       <Background bgRef={bgRef} />
 
-      <MiniMap dragging={dragging} />
-      <button
-        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
-          dragging ? "bg-green-500" : "bg-zinc-300 text-black"
-        } p-3 text-lg text-white`}
-        onClick={() => setDragging((prev) => !prev)}
-      >
-        <BsArrowsMove />
-      </button>
+      {showMiniMap && <MiniMap dragging={dragging} />}
+      <div className="absolute bottom-5 right-5 z-10 ">
+        <TooltipContainer
+          trigger={
+            <Button
+              size="icon"
+              variant="ghost"
+              className={`rounded-xl md:bottom-5 ${
+                dragging ? "bg-green-500" : "bg-toolbar text-black"
+              } px-3 py-2 text-lg text-toolbar-foreground`}
+              onClick={() => setDragging((prev) => !prev)}
+            >
+              <MoveIcon className="" />
+            </Button>
+          }
+          hoverText="Move"
+        />
+      </div>
     </div>
   );
 };

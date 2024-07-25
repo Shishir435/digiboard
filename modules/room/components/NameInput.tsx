@@ -6,6 +6,9 @@ import { socket } from "@/common/lib/socket";
 import { useModal } from "@/common/recoil/modals";
 import { useSetRoomId } from "@/common/recoil/rooms";
 import NotFoundModal from "@/modules/home/modals/NotFound";
+import { Label } from "@/common/components/ui/label";
+import { Input } from "@/common/components/ui/input";
+import { Button } from "@/common/components/ui/button";
 
 const NameInput = () => {
   const setRoomId = useSetRoomId();
@@ -28,7 +31,6 @@ const NameInput = () => {
       }
     });
 
-    // eslint-disable-next-line consistent-return
     return () => {
       socket.off("room_exists");
     };
@@ -57,30 +59,27 @@ const NameInput = () => {
 
   return (
     <form
-      className="my-24 flex flex-col items-center"
+      className="my-24 flex flex-col items-center max-w-[600px] mx-auto"
       onSubmit={handleJoinRoom}
     >
       <h1 className="text-5xl font-extrabold leading-tight sm:text-extra">
-        Collabio
+        Digiboard
       </h1>
       <h3 className="text-xl sm:text-2xl">Real-time whiteboard</h3>
 
-      <div className="mt-10 mb-3 flex flex-col gap-2">
-        <label className="self-start font-bold leading-tight">
-          Enter your name
-        </label>
-        <input
+      <div className="mt-4 mb-3 flex flex-col gap-2">
+        <Label className="sr-only">Enter your name</Label>
+        <Input
           className="rounded-xl border p-5 py-1"
           id="room-id"
           placeholder="Username..."
           value={name}
           onChange={(e) => setName(e.target.value.slice(0, 15))}
         />
+        <Button className="w-full" type="submit">
+          Enter room
+        </Button>
       </div>
-
-      <button className="btn" type="submit">
-        Enter room
-      </button>
     </form>
   );
 };

@@ -48,20 +48,19 @@ const Chat = () => {
 
   return (
     <motion.div
-      className="absolute bottom-0 z-50 flex h-[300px] w-full flex-col overflow-hidden rounded-t-md sm:left-36 sm:w-[30rem]"
+      className="absolute bottom-1 z-50 flex h-[300px] w-full flex-col overflow-hidden rounded-t-md sm:left-36 sm:w-[30rem]"
       animate={{ y: opened ? 0 : 260 }}
       transition={{ ease: DEFAULT_EASE, duration: 0.2 }}
     >
       <button
-        className="flex w-full cursor-pointer items-center justify-between bg-zinc-900 py-2 px-10 font-semibold text-white"
+        className="flex size-12 rounded-full cursor-pointer items-center bg-zinc-900 font-semibold p-4 text-white"
         onClick={() => {
           setOpened((prev) => !prev);
           setNewMsg(false);
         }}
       >
         <div className="flex items-center gap-2">
-          <BsFillChatFill className="mt-[-2px]" />
-          Chat
+          <BsFillChatFill className="mt-[-2px] text-white" />
           {newMsg && (
             <p className="rounded-md bg-green-500 px-1 font-semibold text-green-900">
               New!
@@ -69,12 +68,12 @@ const Chat = () => {
           )}
         </div>
 
-        <motion.div
+        {/* <motion.div
           animate={{ rotate: opened ? 0 : 180 }}
           transition={{ ease: DEFAULT_EASE, duration: 0.2 }}
         >
           <FaChevronDown />
-        </motion.div>
+        </motion.div> */}
       </button>
       <div className="flex flex-1 flex-col justify-between bg-white p-3">
         <div className="h-[190px] overflow-y-scroll pr-2" ref={msgList}>

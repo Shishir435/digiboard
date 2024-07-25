@@ -11,10 +11,12 @@ import {
   modalAnimation,
 } from "../animations/ModalManager.animations";
 import Portal from "../portal/components/Portal";
+import { useSetContextMenu } from "@/common/recoil/contextMenu";
 
 const ModalManager = () => {
   const [{ opened, modal }, setModal] = useRecoilState(modalAtom);
   const [portalNode, setPortalNode] = useState<HTMLElement>();
+  const setContextMenu = useSetContextMenu();
   useEffect(() => {
     if (!portalNode) {
       const node = document.getElementById("portal");
@@ -22,11 +24,12 @@ const ModalManager = () => {
       return;
     }
     if (opened) {
+      setContextMenu({ opened: false });
       portalNode.style.pointerEvents = "all";
     } else {
       portalNode.style.pointerEvents = "none";
     }
-  }, [portalNode, opened]);
+  }, [portalNode, opened, setContextMenu]);
   return (
     <Portal>
       <motion.div

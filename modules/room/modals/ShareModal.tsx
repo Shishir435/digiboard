@@ -1,8 +1,17 @@
 "use client";
+import { Button } from "@/common/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/common/components/ui/card";
+import { Input } from "@/common/components/ui/input";
 import { useModal } from "@/common/recoil/modals";
 import { useRoom } from "@/common/recoil/rooms";
+import { ClipboardCopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { toast } from "sonner";
 
 const ShareModal = () => {
   const { id } = useRoom();
@@ -12,24 +21,31 @@ const ShareModal = () => {
 
   useEffect(() => setUrl(window.location.href), []);
 
-  const handleCopy = () => navigator.clipboard.writeText(url);
+  const handleCopy = () => {
+    toast("Copied to clipboard");
+    navigator.clipboard.writeText(url);
+  };
 
   return (
-    <div className="relative flex flex-col items-center rounded-md bg-white p-10 pt-5">
+    <Card className="relative flex flex-col bg-toolbar text-toolbar-foreground items-center rounded-md p-10 pt-5">
       <button onClick={closeModal} className="absolute top-5 right-5">
-        <AiOutlineClose />
+        <Cross1Icon />
       </button>
-      <h2 className="text-2xl font-bold">Invite</h2>
-      <h3>
-        Room id: <p className="inline font-bold">{id}</p>
-      </h3>
-      <div className="relative mt-2">
-        <input type="text" value={url} readOnly className="input sm:w-96" />
-        <button className="btn absolute right-0 h-full" onClick={handleCopy}>
-          Copy
-        </button>
-      </div>
-    </div>
+      <CardTitle className="text-2xl font-bold">Invite</CardTitle>
+      <CardHeader>
+        <p className="inline font-bold">Room id: {id}</p>
+      </CardHeader>
+      <CardContent className="relative mt-2">
+        <Input type="text" value={url} readOnly className="input sm:w-96" />
+        <Button
+          variant={"link"}
+          className="absolute top-0 right-4"
+          onClick={handleCopy}
+        >
+          <ClipboardCopyIcon />
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
