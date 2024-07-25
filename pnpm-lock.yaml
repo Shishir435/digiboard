@@ -35,6 +35,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
       express:
         specifier: ^4.19.2
         version: 4.19.2
@@ -105,9 +108,6 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
-      concurrently:
-        specifier: ^8.2.2
-        version: 8.2.2
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
