@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import React from "react";
 import "../styles/globals.css";
-import RecoidContextProvider from "@/modules/room/context/recoil.contextProvider";
+import RecoilContextProvider from "@/modules/room/context/recoil.contextProvider";
 import { Poppins } from "next/font/google";
+import { ThemeProvider } from "@/modules/room/context/app.themeProvider";
 export const metadata: Metadata = {
   title: "digiboard",
   description: "Next.js whiteboard application",
@@ -21,7 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.className}>
       <body>
-        <RecoidContextProvider>{children}</RecoidContextProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <RecoilContextProvider>{children}</RecoilContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
