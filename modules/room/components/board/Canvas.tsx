@@ -20,6 +20,7 @@ import { useRefs } from "../../hooks/useRefs";
 import { useSocketDraw } from "../../hooks/useSocketDraw";
 import Background from "./Background";
 import MiniMap from "./Minimap";
+import TooltipContainer from "@/common/components/ui/tooltip";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
@@ -115,13 +116,17 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
 
       {showMiniMap && <MiniMap dragging={dragging} />}
+
       <button
         className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
           dragging ? "bg-green-500" : "bg-zinc-300 text-black"
-        } p-3 text-lg text-white`}
+        } px-3 py-2 text-lg text-white`}
         onClick={() => setDragging((prev) => !prev)}
       >
-        <BsArrowsMove />
+        <TooltipContainer
+          trigger={<BsArrowsMove className="translate-y-1" />}
+          hoverText="Click to drag"
+        />
       </button>
     </div>
   );
