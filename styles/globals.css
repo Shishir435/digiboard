@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --toolbar-background: 240, 8%, 15%;
+    --toolbar-background: 244, 100%, 97%;
+    --toolbar-foreground: 240, 3%, 32%;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -34,6 +35,7 @@
 
   .dark {
     --toolbar-background: 240, 8%, 15%;
+    --toolbar-foreground: 240, 3%, 71%;
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
