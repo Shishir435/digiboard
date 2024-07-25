@@ -6,7 +6,12 @@ const ExitButton = () => {
   const router = useRouter();
   const handleExit = () => router.push("/");
   return (
-    <Button size="icon" variant="ghost" onClick={handleExit}>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={handleExit}
+      title="Exit this Room"
+    >
       <ExitIcon />
     </Button>
   );

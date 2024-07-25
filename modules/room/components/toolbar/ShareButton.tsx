@@ -7,7 +7,12 @@ const ShareButton = () => {
   const { openModal } = useModal();
   const handleShare = () => openModal(<ShareModal />);
   return (
-    <Button size="icon" variant="ghost" onClick={handleShare}>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={handleShare}
+      title="Share This Room"
+    >
       <Share1Icon />
     </Button>
   );

@@ -28,6 +28,7 @@ const ColorPicker = () => {
         variant="ghost"
         onClick={() => setOpened(!opened)}
         disabled={options.mode === "select"}
+        title="Color Picker"
       >
         <ColorWheelIcon />
       </Button>

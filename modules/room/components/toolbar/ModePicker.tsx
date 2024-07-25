@@ -30,6 +30,7 @@ const ModePicker = () => {
             mode: "draw",
           }));
         }}
+        title="Draw"
       >
         <Pencil1Icon />
       </Button>
@@ -46,6 +47,7 @@ const ModePicker = () => {
             mode: "eraser",
           }));
         }}
+        title="Eraser"
       >
         <EraserIcon />
       </Button>
@@ -60,6 +62,7 @@ const ModePicker = () => {
             mode: "select",
           }));
         }}
+        title="Select"
       >
         <SectionIcon />
       </Button>

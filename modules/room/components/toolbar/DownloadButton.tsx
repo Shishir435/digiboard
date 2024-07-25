@@ -25,7 +25,12 @@ const DownloadButton = () => {
     link.click();
   };
   return (
-    <Button size="icon" variant="ghost" onClick={handleDownload}>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={handleDownload}
+      title="Download this Canvas"
+    >
       <DownloadIcon />
     </Button>
   );

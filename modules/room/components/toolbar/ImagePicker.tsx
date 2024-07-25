@@ -47,7 +47,12 @@ const ImagePicker = () => {
   };
 
   return (
-    <Button size="icon" variant="ghost" onClick={handleImageInput}>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={handleImageInput}
+      title="Insert Image"
+    >
       <ImageIcon />
     </Button>
   );

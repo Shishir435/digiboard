@@ -29,7 +29,11 @@ const ShapeSelector = () => {
   };
 
   return (
-    <div className="relative flex items-center" ref={ref}>
+    <div
+      className="relative flex items-center"
+      ref={ref}
+      title="Shape Selecter"
+    >
       <Button
         size="icon"
         variant="ghost"

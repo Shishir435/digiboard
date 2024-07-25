@@ -27,6 +27,7 @@ const LineWidthPicker = () => {
         variant="ghost"
         onClick={() => setOpened(!opened)}
         disabled={options.mode === "select"}
+        title="LineWidth"
       >
         <BorderWidthIcon />
       </Button>

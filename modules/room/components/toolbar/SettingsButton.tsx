@@ -10,8 +10,9 @@ const SettingsButton = () => {
       size="icon"
       variant="ghost"
       onClick={() => openModal(<SettingsModal />)}
+      title="Settings"
     >
-      <GearIcon className="size-6" />
+      <GearIcon className="size-5" />
     </Button>
   );
 };
