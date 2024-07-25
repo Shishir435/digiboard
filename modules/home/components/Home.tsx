@@ -17,6 +17,7 @@ import {
   TabsTrigger,
 } from "@/common/components/ui/tabs";
 import { Label } from "@/common/components/ui/label";
+import ThemeButton from "@/modules/room/components/toolbar/ThemeButton";
 
 const Home = () => {
   const { openModal } = useModal();
@@ -71,77 +72,82 @@ const Home = () => {
   };
 
   return (
-    <main className="h-screen flex justify-center items-center dark:bg-black">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-12 md:py-24 px:6 md:px-12 rounded-3xl shadow-xl">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-7xl font-extrabold leading-tight">Digiboard</h1>
-          <h3 className="text-xl sm:text-2xl mb-8 text-gray-600 italic">
-            Real-time whiteboard
-          </h3>
+    <>
+      <main className="h-screen flex justify-center items-center dark:bg-black">
+        <div className="absolute top-5 left-5">
+          <ThemeButton />
         </div>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-12 md:py-24 px:6 md:px-12 rounded-3xl shadow-xl">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-7xl font-extrabold leading-tight">Digiboard</h1>
+            <h3 className="text-xl sm:text-2xl mb-8 text-gray-600 italic">
+              Real-time whiteboard
+            </h3>
+          </div>
 
-        <Tabs defaultValue="create" className="max-w-[600px]">
-          <TabsList className="w-full flex justify-between">
-            <TabsTrigger value="create" className="w-full">
-              Create
-            </TabsTrigger>
-            <TabsTrigger value="join" className="w-full">
-              Join
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="create">
-            <form
-              className="flex flex-col items-center gap-3"
-              onSubmit={handleCreateRoom}
-            >
-              <Label className="sr-only" htmlFor="username">
-                Enter your name
-              </Label>
-              <Input
-                className="input"
-                id="username"
-                placeholder="Username..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value.slice(0, 15))}
-              />
-              <Button type="submit" className="w-full">
+          <Tabs defaultValue="create" className="max-w-[600px]">
+            <TabsList className="w-full flex justify-between">
+              <TabsTrigger value="create" className="w-full">
                 Create
-              </Button>
-            </form>
-          </TabsContent>
-          <TabsContent value="join">
-            <form
-              className="flex flex-col items-center gap-3"
-              onSubmit={handleJoinRoom}
-            >
-              <Label className="sr-only" htmlFor="username">
-                Enter your name
-              </Label>
-              <Input
-                className="input"
-                id="username"
-                placeholder="Username..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value.slice(0, 15))}
-              />
-              <Label htmlFor="room-id" className="sr-only">
-                Enter room id
-              </Label>
-              <Input
-                className="input"
-                id="room-id"
-                placeholder="Room id..."
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
-              />
-              <Button type="submit" className="w-full">
+              </TabsTrigger>
+              <TabsTrigger value="join" className="w-full">
                 Join
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </main>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="create">
+              <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={handleCreateRoom}
+              >
+                <Label className="sr-only" htmlFor="username">
+                  Enter your name
+                </Label>
+                <Input
+                  className="input"
+                  id="username"
+                  placeholder="Username..."
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.slice(0, 15))}
+                />
+                <Button type="submit" className="w-full">
+                  Create
+                </Button>
+              </form>
+            </TabsContent>
+            <TabsContent value="join">
+              <form
+                className="flex flex-col items-center gap-3"
+                onSubmit={handleJoinRoom}
+              >
+                <Label className="sr-only" htmlFor="username">
+                  Enter your name
+                </Label>
+                <Input
+                  className="input"
+                  id="username"
+                  placeholder="Username..."
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.slice(0, 15))}
+                />
+                <Label htmlFor="room-id" className="sr-only">
+                  Enter room id
+                </Label>
+                <Input
+                  className="input"
+                  id="room-id"
+                  placeholder="Room id..."
+                  value={roomId}
+                  onChange={(e) => setRoomId(e.target.value)}
+                />
+                <Button type="submit" className="w-full">
+                  Join
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
+    </>
   );
 };
 
