@@ -16,11 +16,11 @@ const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
     const ctx = bgRef.current?.getContext("2d");
 
     if (ctx) {
-      ctx.fillStyle = bg.mode === "dark" ? "#222" : "#fff";
+      ctx.fillStyle = bg.mode === "dark" ? "#161718" : "#fff";
       ctx.fillRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
 
       document.body.style.backgroundColor =
-        bg.mode === "dark" ? "#222" : "#fff";
+        bg.mode === "dark" ? "#161718" : "#fff";
 
       if (bg.lines) {
         ctx.lineWidth = 1;
