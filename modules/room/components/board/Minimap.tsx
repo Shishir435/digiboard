@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { motion, useMotionValue } from "framer-motion";
 
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { CANVAS_SIZE } from "@/common/constants/canvas";
 
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useRefs } from "../../hooks/useRefs";

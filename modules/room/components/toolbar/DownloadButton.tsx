@@ -1,4 +1,4 @@
-import { CANVAS_SIZE } from "@/common/constants/canvasSize";
+import { CANVAS_SIZE } from "@/common/constants/canvas";
 import React from "react";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useRefs } from "../../hooks/useRefs";
