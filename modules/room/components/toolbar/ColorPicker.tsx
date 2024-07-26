@@ -3,14 +3,13 @@ import { useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { RgbaColorPicker } from "react-colorful";
-import { BsPaletteFill } from "react-icons/bs";
 import { useClickAway } from "react-use";
 
 import { useOptions } from "@/common/recoil/options/options.hook";
 
-import { EntryAnimation } from "../../animations/colorPicker.animations";
 import { Button } from "@/common/components/ui/button";
 import { ColorWheelIcon } from "@radix-ui/react-icons";
+import { EntryAnimation } from "../../animations/colorPicker.animations";
 
 const ColorPicker = () => {
   const [options, setOptions] = useOptions();
@@ -22,7 +21,7 @@ const ColorPicker = () => {
   useClickAway(ref, () => setOpened(false));
 
   return (
-    <div className="relative flex items-center" ref={ref}>
+    <div className="relative flex" ref={ref}>
       <Button
         size="icon"
         variant="ghost"
@@ -35,37 +34,40 @@ const ColorPicker = () => {
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute top-10 mt-24 sm:top-14"
+            className="absolute z-[50] top-5 -left-12  mt-10 md:mt-4 sm:top-14 md:flex gap-8"
             variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"
           >
-            <h2 className="ml-3 font-semibold text-black dark:text-white">
-              Line color
-            </h2>
-            <RgbaColorPicker
-              color={options.lineColor}
-              onChange={(e) => {
-                setOptions({
-                  ...options,
-                  lineColor: e,
-                });
-              }}
-              className="mb-5"
-            />
-            <h2 className="ml-3 font-semibold text-black dark:text-white">
-              Fill color
-            </h2>
-            <RgbaColorPicker
-              color={options.fillColor}
-              onChange={(e) => {
-                setOptions({
-                  ...options,
-                  fillColor: e,
-                });
-              }}
-            />
+            <div>
+              <h2 className="font-semibold text-black dark:text-white">
+                Line color
+              </h2>
+              <RgbaColorPicker
+                color={options.lineColor}
+                onChange={(e) => {
+                  setOptions({
+                    ...options,
+                    lineColor: e,
+                  });
+                }}
+              />
+            </div>
+            <div>
+              <h2 className="font-semibold text-black dark:text-white">
+                Fill color
+              </h2>
+              <RgbaColorPicker
+                color={options.fillColor}
+                onChange={(e) => {
+                  setOptions({
+                    ...options,
+                    fillColor: e,
+                  });
+                }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
