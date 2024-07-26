@@ -70,6 +70,7 @@ const NameInput = () => {
       <div className="mt-4 mb-3 flex flex-col gap-2">
         <Label className="sr-only">Enter your name</Label>
         <Input
+          autoFocus
           className="rounded-xl border p-5 py-1"
           id="room-id"
           placeholder="Username..."

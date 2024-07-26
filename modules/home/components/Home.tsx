@@ -7,17 +7,17 @@ import { socket } from "@/common/lib/socket";
 import { useModal } from "@/common/recoil/modals";
 import { useSetRoomId } from "@/common/recoil/rooms";
 
-import NotFoundModal from "../modals/NotFound";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
+import { Label } from "@/common/components/ui/label";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/common/components/ui/tabs";
-import { Label } from "@/common/components/ui/label";
 import ThemeButton from "@/modules/room/components/toolbar/ThemeButton";
+import NotFoundModal from "../modals/NotFound";
 
 const Home = () => {
   const { openModal } = useModal();
@@ -78,9 +78,9 @@ const Home = () => {
           <ThemeButton />
         </div>
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-12 md:py-24 px:6 md:px-12 rounded-3xl shadow-xl">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-2">
             <h1 className="text-7xl font-extrabold leading-tight">Digiboard</h1>
-            <h3 className="text-xl sm:text-2xl mb-8 text-gray-600 italic">
+            <h3 className="text-xl text-center md:text-left sm:text-2xl mb-4 md:mb-8 text-gray-600 italic">
               Real-time whiteboard
             </h3>
           </div>
@@ -103,6 +103,7 @@ const Home = () => {
                   Enter your name
                 </Label>
                 <Input
+                  autoFocus
                   className="input"
                   id="username"
                   placeholder="Username..."
@@ -123,6 +124,7 @@ const Home = () => {
                   Enter your name
                 </Label>
                 <Input
+                  autoFocus
                   className="input"
                   id="username"
                   placeholder="Username..."

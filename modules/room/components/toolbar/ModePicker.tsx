@@ -22,7 +22,7 @@ const ModePicker = () => {
         size="icon"
         variant="ghost"
         className={`btn-icon text-xl ${
-          options.mode === "draw" && "bg-green-400"
+          options.mode === "draw" && "bg-green-400 text-black"
         }`}
         onClick={() => {
           setOptions((prev) => ({
@@ -39,7 +39,7 @@ const ModePicker = () => {
         size="icon"
         variant="ghost"
         className={`btn-icon text-xl ${
-          options.mode === "eraser" && "bg-green-400"
+          options.mode === "eraser" && "bg-green-400 text-black"
         }`}
         onClick={() => {
           setOptions((prev) => ({
@@ -55,7 +55,7 @@ const ModePicker = () => {
       <Button
         size="icon"
         variant="ghost"
-        className={`${options.mode === "select" && "bg-green-400"}`}
+        className={`${options.mode === "select" && "bg-green-400 text-black"}`}
         onClick={() => {
           setOptions((prev) => ({
             ...prev,
