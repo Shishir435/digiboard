@@ -12,6 +12,8 @@ import { useRoom } from "@/common/recoil/rooms";
 
 import ChatInput from "./ChatInput";
 import Message from "./Message";
+import Draggable, { DraggableCore } from "react-draggable";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
 const Chat = () => {
   const room = useRoom();
@@ -47,43 +49,36 @@ const Chat = () => {
   }, [handleMsgs, msgs, opened, room.users]);
 
   return (
-    <motion.div
-      className="absolute bottom-1 z-50 flex h-[300px] w-full flex-col overflow-hidden rounded-t-md sm:left-36 sm:w-[30rem]"
-      animate={{ y: opened ? 0 : 260 }}
-      transition={{ ease: DEFAULT_EASE, duration: 0.2 }}
-    >
-      <button
-        className="flex size-12 rounded-full cursor-pointer items-center bg-zinc-900 font-semibold p-4 text-white"
-        onClick={() => {
-          setOpened((prev) => !prev);
-          setNewMsg(false);
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <BsFillChatFill className="mt-[-2px] text-white" />
-          {newMsg && (
-            <p className="rounded-md bg-green-500 px-1 font-semibold text-green-900">
-              New!
-            </p>
-          )}
-        </div>
-
-        {/* <motion.div
-          animate={{ rotate: opened ? 0 : 180 }}
-          transition={{ ease: DEFAULT_EASE, duration: 0.2 }}
+    <Draggable axis="both">
+      <div className="absolute left-1 top-1/2 z-[30]">
+        <button
+          className="flex size-12 rounded-full cursor-pointer items-center justify-center bg-toolbar font-semibold p-4 text-toolbar-foreground"
+          onClick={() => {
+            setOpened((prev) => !prev);
+            setNewMsg(false);
+          }}
         >
-          <FaChevronDown />
-        </motion.div> */}
-      </button>
-      <div className="flex flex-1 flex-col justify-between bg-white p-3">
-        <div className="h-[190px] overflow-y-scroll pr-2" ref={msgList}>
-          {msgs.map((msg) => (
-            <Message key={msg.id} {...msg} />
-          ))}
-        </div>
-        <ChatInput />
+          <div className="relative flex items-center justify-center gap-2 size-12">
+            <ChatBubbleIcon className="size-6" />
+            {newMsg && (
+              <p className="absolute -top-4 -right-8 rounded-md bg-green-500 px-1 font-semibold text-black">
+                New!
+              </p>
+            )}
+          </div>
+        </button>
+        {opened && (
+          <div className="flex flex-1 flex-col gap-4 justify-between bg-toolbar text-toolbar-foreground p-4 rounded-md">
+            <div className="h-[190px] bg-secondary p-3 overflow-y-scroll pr-2 rounded" ref={msgList}>
+              {msgs.map((msg) => (
+                <Message key={msg.id} {...msg} />
+              ))}
+            </div>
+            <ChatInput />
+          </div>
+        )}
       </div>
-    </motion.div>
+    </Draggable>
   );
 };
 
