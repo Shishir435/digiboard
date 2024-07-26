@@ -4,7 +4,7 @@ export const CANVAS_SIZE = {
 };
 
 export const CANVAS_BACKGROUND_LIGHT: CanvasBackgroundType = {
-  "bg-1": "#fffff",
+  "bg-1": "#f1f1f1",
   "bg-2": "#f8f9fa",
   "bg-3": "#f5faff",
   "bg-4": "#fffce8",
