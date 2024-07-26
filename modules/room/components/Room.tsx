@@ -41,7 +41,12 @@ const Room = () => {
         <div className="absolute hidden md:flex z-[60] bottom-20 left-1/2">
           <UserList />
         </div>
-        <ToolBar />
+        <div
+          style={{ translate: "-50%" }}
+          className="absolute top-5 left-[60%] md:left-1/2 z-[30]"
+        >
+          <ToolBar />
+        </div>
         <SelectionBtns />
         <MoveImage />
         <Canvas />
