@@ -1,19 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-import { motion } from "framer-motion";
-import { BsFillChatFill } from "react-icons/bs";
-import { FaChevronDown } from "react-icons/fa";
-import { useList } from "react-use";
+import { useClickAway, useList } from "react-use";
 
-import { DEFAULT_EASE } from "@/common/constants/easings";
 import { socket } from "@/common/lib/socket";
 import { useRoom } from "@/common/recoil/rooms";
 
+import { Button } from "@/common/components/ui/button";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import Draggable from "react-draggable";
 import ChatInput from "./ChatInput";
 import Message from "./Message";
-import Draggable, { DraggableCore } from "react-draggable";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
 const Chat = () => {
   const room = useRoom();
@@ -23,7 +20,8 @@ const Chat = () => {
   const [newMsg, setNewMsg] = useState(false);
   const [opened, setOpened] = useState(false);
   const [msgs, handleMsgs] = useList<Message>([]);
-
+  const messageDiv = useRef<HTMLDivElement>(null);
+  useClickAway(messageDiv, () => setOpened(false));
   useEffect(() => {
     const handleNewMsg = (userId: string, msg: string) => {
       const user = room.users.get(userId);
@@ -51,7 +49,7 @@ const Chat = () => {
   return (
     <Draggable axis="both">
       <div className="absolute left-1 top-1/2 z-[30]">
-        <button
+        <Button
           className="flex size-12 rounded-full cursor-pointer items-center justify-center bg-toolbar font-semibold p-4 text-toolbar-foreground"
           onClick={() => {
             setOpened((prev) => !prev);
@@ -66,10 +64,16 @@ const Chat = () => {
               </p>
             )}
           </div>
-        </button>
+        </Button>
         {opened && (
-          <div className="flex flex-1 flex-col gap-4 justify-between bg-toolbar text-toolbar-foreground p-4 rounded-md">
-            <div className="h-[190px] bg-secondary p-3 overflow-y-scroll pr-2 rounded" ref={msgList}>
+          <div
+            ref={messageDiv}
+            className="flex flex-1 flex-col gap-4 justify-between bg-toolbar text-toolbar-foreground p-4 rounded-md"
+          >
+            <div
+              className="h-[190px] bg-secondary p-3 overflow-y-scroll pr-2 rounded"
+              ref={msgList}
+            >
               {msgs.map((msg) => (
                 <Message key={msg.id} {...msg} />
               ))}
