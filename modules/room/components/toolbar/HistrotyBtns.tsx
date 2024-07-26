@@ -11,7 +11,7 @@ const HistoryBtns = () => {
   const { myMoves } = useMyMoves();
   const savedMoves = useSavedMoves();
   return (
-    <div className="bg-toolbar rounded-md text-toolbar-foreground flex gap-2">
+    <div className="bg-toolbar rounded-md text-toolbar-foreground flex gap-2 shadow">
       <TooltipContainer
         trigger={
           <Button
