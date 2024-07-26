@@ -67,17 +67,19 @@ const Settings = () => {
             }
           />
         </div>
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-2 justify-between bg-black/25 p-2 rounded dark:bg-white/25">
           {bg.mode === "dark"
             ? Object.keys(CANVAS_BACKGROUND_DARK).map((val) => (
                 <Button
                   key={val}
                   size="icon"
-                  variant="ghost"
                   onClick={() => handleClick(val as keyof CanvasBackgroundType)}
+                  title={
+                    CANVAS_BACKGROUND_DARK[val as keyof CanvasBackgroundType]
+                  }
                 >
                   <div
-                    className="h-9 w-9"
+                    className="h-9 w-9 rounded"
                     style={{
                       backgroundColor:
                         CANVAS_BACKGROUND_DARK[
@@ -91,11 +93,13 @@ const Settings = () => {
                 <Button
                   key={val}
                   size="icon"
-                  variant="ghost"
                   onClick={() => handleClick(val as keyof CanvasBackgroundType)}
+                  title={
+                    CANVAS_BACKGROUND_LIGHT[val as keyof CanvasBackgroundType]
+                  }
                 >
                   <div
-                    className="h-9 w-9"
+                    className="h-9 w-9 rounded"
                     style={{
                       backgroundColor:
                         CANVAS_BACKGROUND_LIGHT[
