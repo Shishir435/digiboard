@@ -8,7 +8,7 @@ export const settingsAtom = atom<{
 }>({
   key: "settings",
   default: {
-    showChat: false,
+    showChat: true,
     showMiniMap: false,
     showMousePosition: false,
     showLines: false,
