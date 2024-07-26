@@ -17,14 +17,13 @@ import ShareButton from "./toolbar/ShareButton";
 import ThemeButton from "./toolbar/ThemeButton";
 import ToolBar from "./toolbar/ToolBar";
 import UserList from "./UserList";
-import Draggable from "react-draggable";
 
 const Room = () => {
   const room = useRoom();
   const { showChat, showMousePosition } = useSettingsValue();
   if (!room.id)
     return (
-      <div className="relative h-screen flex flex-col justify-center items-center w-full overflow-hidden">
+      <div className="relative h-[100dvh] md:h-screen flex flex-col justify-center items-center w-full overflow-hidden">
         <div className="absolute z-[60] top-5 left-5 flex items-center gap-4">
           <ThemeButton />
         </div>
@@ -34,8 +33,8 @@ const Room = () => {
 
   return (
     <>
-      <div className="relative h-screen w-full overflow-hidden">
-        <div className="absolute z-[60] top-7 md:top-5 left-5 flex items-center gap-4">
+      <div className="relative h-[100dvh] md:h-screen w-full overflow-hidden">
+        <div className="absolute z-[30] top-[20%] md:top-5 left-3 md:left-5 flex flex-col md:flex-row items-center gap-4">
           <SettingsButton />
           <ThemeButton />
         </div>
@@ -44,7 +43,7 @@ const Room = () => {
         </div>
         <div
           style={{ translate: "-50%" }}
-          className="absolute top-5 left-[60%] md:left-1/2 z-[30]"
+          className="absolute top-5 left-1/2 z-[30]"
         >
           <ToolBar />
         </div>
@@ -62,11 +61,6 @@ const Room = () => {
           </div>
         </div>
         {showChat && <Chat />}
-        <Draggable>
-          <div>
-            hello hi
-          </div>
-        </Draggable>
       </div>
     </>
   );

@@ -48,7 +48,7 @@ const ShapeSelector = () => {
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute top-16 -left-10 z-10 flex gap-1 rounded-lg border bg-toolbar text-toolbar-foreground p-2 md:border-0"
+            className="absolute top-16 -left-3 z-10 flex gap-1 rounded-lg border bg-toolbar text-toolbar-foreground p-1 md:border-0"
             variants={EntryAnimation}
             initial="from"
             animate="to"

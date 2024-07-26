@@ -73,7 +73,7 @@ const Home = () => {
 
   return (
     <>
-      <main className="h-screen flex justify-center items-center dark:bg-black">
+      <main className="h-[100dvh] md:h-screen flex justify-center items-center dark:bg-black">
         <div className="absolute top-5 left-5">
           <ThemeButton />
         </div>

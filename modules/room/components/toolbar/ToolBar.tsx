@@ -8,10 +8,7 @@ import ShapeSelector from "./ShapeSelector";
 
 const ToolBar = () => {
   return (
-    <div
-      // style={{ translate: "-50%" }}
-      className="flex items-center gap-2 rounded-lg bg-toolbar px-2 py-1 text-toolbar-foreground shadow"
-    >
+    <div className="flex items-center gap-2 rounded-lg bg-toolbar px-2 py-1 text-toolbar-foreground shadow">
       <ShapeSelector />
       <ColorPicker />
       <LineWidthPicker />

@@ -118,7 +118,7 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
 
       {showMiniMap && <MiniMap dragging={dragging} />}
-      <div className="absolute bottom-5 right-5 z-10 ">
+      <div className="absolute bottom-5 right-5 z-30 ">
         <TooltipContainer
           trigger={
             <Button
