@@ -1,10 +1,8 @@
 "use client";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BsArrowsMove } from "react-icons/bs";
-import { FiCopy } from "react-icons/fi";
 
 import { useOptionsValue } from "@/common/recoil/options";
 
+import { CopyIcon, Cross1Icon, MoveIcon } from "@radix-ui/react-icons";
 import { useRefs } from "../../hooks/useRefs";
 
 const SelectionBtns = () => {
@@ -33,24 +31,27 @@ const SelectionBtns = () => {
         ref={(ref) => {
           if (ref && selectionRefs.current) selectionRefs.current[0] = ref;
         }}
+        title="Click to move"
       >
-        <BsArrowsMove />
+        <MoveIcon />
       </button>
       <button
         className="rounded-full bg-gray-200 p-2"
         ref={(ref) => {
           if (ref && selectionRefs.current) selectionRefs.current[1] = ref;
         }}
+        title="Copy selected Item"
       >
-        <FiCopy />
+        <CopyIcon />
       </button>
       <button
         className="rounded-full bg-gray-200 p-2"
         ref={(ref) => {
           if (ref && selectionRefs.current) selectionRefs.current[2] = ref;
         }}
+        title="delete selected Item"
       >
-        <AiOutlineDelete />
+        <Cross1Icon />
       </button>
     </div>
   );

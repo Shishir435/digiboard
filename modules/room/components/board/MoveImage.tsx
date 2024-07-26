@@ -3,12 +3,12 @@
 import { useEffect } from "react";
 
 import { motion, useMotionValue } from "framer-motion";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 import { getPos } from "@/common/lib/getPos";
 import { socket } from "@/common/lib/socket";
 
+import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useMoveImage } from "../../hooks/useMoveImage";
 import { useRefs } from "../../hooks/useRefs";
@@ -64,14 +64,16 @@ const MoveImage = () => {
         <button
           className="rounded-full bg-gray-200 p-2"
           onClick={handlePlaceImage}
+          title="click to place image"
         >
-          <AiOutlineCheck />
+          <CheckIcon />
         </button>
         <button
           className="rounded-full bg-gray-200 p-2"
           onClick={() => setMoveImage({ base64: "" })}
+          title="click to delete"
         >
-          <AiOutlineClose />
+          <Cross1Icon />
         </button>
       </div>
       <img
