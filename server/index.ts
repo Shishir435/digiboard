@@ -43,7 +43,7 @@ nextApp.prepare().then(async () => {
       if (!joinedRoom) return socket.id;
       return joinedRoom;
     };
-    console.log("connected to server");
+    // console.log("connected to server");
 
     const leaveRoom = (roomId: string, socketId: string) => {
       const room = rooms.get(roomId);
@@ -93,7 +93,7 @@ nextApp.prepare().then(async () => {
 
     socket.on("joined_room", () => {
       const roomId = getRoomId();
-      console.log(roomId, "joined room");
+      // console.log(roomId, "joined room");
 
       const room = rooms.get(roomId);
       if (!room) return;
@@ -116,7 +116,7 @@ nextApp.prepare().then(async () => {
 
     socket.on("draw", (move) => {
       const roomId = getRoomId();
-      console.log(roomId, "drawing");
+      // console.log(roomId, "drawing");
       const timestamps = Date.now();
       move.id = uuid();
       const newMove = { ...move, timestamps };
@@ -127,7 +127,7 @@ nextApp.prepare().then(async () => {
 
     socket.on("undo", () => {
       const roomId = getRoomId();
-      console.log(roomId, "undo");
+      // console.log(roomId, "undo");
       undoMove(roomId, socket.id);
       socket.broadcast.to(roomId).emit("user_undo", socket.id);
     });
@@ -145,7 +145,7 @@ nextApp.prepare().then(async () => {
       const roomId = getRoomId();
       leaveRoom(roomId, socket.id);
       io.to(roomId).emit("user_disconnected", socket.id);
-      console.log("disconnected from server");
+      // console.log("disconnected from server");
     });
   });
 
