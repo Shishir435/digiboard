@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { DEFAULT_MOVE } from "@/common/constants/defaultMove";
 import { getPos } from "@/common/lib/getPos";
-import { getStringFromRgba } from "@/common/lib/rgba";
+import { getStringFromHsla } from "@/common/lib/hsla";
 import { socket } from "@/common/lib/socket";
 import { useOptionsValue } from "@/common/recoil/options";
 import { useSetSelection } from "@/common/recoil/options/options.hook";
@@ -34,8 +34,8 @@ export const useDraw = (blocked: boolean) => {
   const setupCtxOptions = () => {
     if (ctx) {
       ctx.lineWidth = options.lineWidth;
-      ctx.strokeStyle = getStringFromRgba(options.lineColor);
-      ctx.fillStyle = getStringFromRgba(options.fillColor);
+      ctx.strokeStyle = getStringFromHsla(options.lineColor);
+      ctx.fillStyle = getStringFromHsla(options.fillColor);
       if (options.mode === "eraser")
         ctx.globalCompositeOperation = "destination-out";
       else ctx.globalCompositeOperation = "source-over";
@@ -80,7 +80,7 @@ export const useDraw = (blocked: boolean) => {
     drawAndSet();
 
     if (options.mode === "select") {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillStyle = "hsla(0, 0, 0, 0.2)";
       drawRect(ctx, tempMoves[0], finalX, finalY, false, true);
       tempMoves.push([finalX, finalY]);
 

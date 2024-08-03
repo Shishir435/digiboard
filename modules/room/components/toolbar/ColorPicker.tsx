@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { RgbaColorPicker } from "react-colorful";
+import { HslaColorPicker } from "react-colorful";
 import { useClickAway } from "react-use";
 
 import { useOptions } from "@/common/recoil/options/options.hook";
@@ -44,7 +44,7 @@ const ColorPicker = () => {
               <h2 className="font-semibold text-black dark:text-white">
                 Line color
               </h2>
-              <RgbaColorPicker
+              <HslaColorPicker
                 color={options.lineColor}
                 onChange={(e) => {
                   setOptions({
@@ -58,7 +58,7 @@ const ColorPicker = () => {
               <h2 className="font-semibold text-black dark:text-white">
                 Fill color
               </h2>
-              <RgbaColorPicker
+              <HslaColorPicker
                 color={options.fillColor}
                 onChange={(e) => {
                   setOptions({

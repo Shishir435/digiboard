@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { getStringFromRgba } from "@/common/lib/rgba";
+import { getStringFromHsla } from "@/common/lib/hsla";
 import { socket } from "@/common/lib/socket";
 import { useBackground } from "@/common/recoil/canvasBackground";
 import { useSetSelection } from "@/common/recoil/options";
@@ -70,8 +70,8 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
     if (moveOptions.mode === "select") return;
 
     ctx.lineWidth = moveOptions.lineWidth;
-    ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor);
-    ctx.fillStyle = getStringFromRgba(moveOptions.fillColor);
+    ctx.strokeStyle = getStringFromHsla(moveOptions.lineColor);
+    ctx.fillStyle = getStringFromHsla(moveOptions.fillColor);
     if (moveOptions.mode === "eraser")
       ctx.globalCompositeOperation = "destination-out";
     else ctx.globalCompositeOperation = "source-over";

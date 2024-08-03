@@ -1,4 +1,4 @@
-import { RgbaColor } from "react-colorful";
+import { HslaColor } from "react-colorful";
 
 export declare global {
   type CanvasBackgroundType = {
@@ -14,8 +14,8 @@ export declare global {
 
   interface CtxOptions {
     lineWidth: number;
-    lineColor: RgbaColor;
-    fillColor: RgbaColor;
+    lineColor: HslaColor;
+    fillColor: HslaColor;
     shape: Shape;
     mode: CtxMode;
     selection: {
