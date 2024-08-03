@@ -4,16 +4,16 @@ export const CANVAS_SIZE = {
 };
 
 export const CANVAS_BACKGROUND_LIGHT: CanvasBackgroundType = {
-  "bg-1": "#f1f1f1",
-  "bg-2": "#f8f9fa",
-  "bg-3": "#f5faff",
-  "bg-4": "#fffce8",
-  "bg-5": "#fdf8f6",
+  "bg-1": "hsla(0, 0%, 95%, 1)",
+  "bg-2": "hsla(210, 17%, 98%, 1)",
+  "bg-3": "hsla(210, 100%, 98%, 1)",
+  "bg-4": "hsla(52, 100%, 95%, 1)",
+  "bg-5": "hsla(17, 64%, 98%, 1)",
 };
 export const CANVAS_BACKGROUND_DARK: CanvasBackgroundType = {
-  "bg-1": "#181605",
-  "bg-2": "#161718",
-  "bg-3": "#13171C",
-  "bg-4": "#121212",
-  "bg-5": "#1B1615",
+  "bg-1": "hsla(54, 66%, 6%, 1)",
+  "bg-2": "hsla(210, 4%, 9%, 1)",
+  "bg-3": "hsla(213, 19%, 9%, 1)",
+  "bg-4": "hsla(0, 0%, 7%, 1)",
+  "bg-5": "hsla(10, 12%, 9%, 1)",
 };

@@ -166,7 +166,7 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
         ...options,
         shape: "rect",
         mode: "eraser",
-        fillColor: { r: 0, g: 0, b: 0, a: 1 },
+        fillColor: { h: 0, s: 0, l: 0, a: 1 },
       },
     };
 
